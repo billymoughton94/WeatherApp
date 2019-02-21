@@ -8,6 +8,7 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 
+var TFLArray = [] ;
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
 
@@ -157,7 +158,21 @@ getDayofWeek(day) {
 }
 //==========================================
 //==========================================
+tfl_get()
+{
+	for (var i =0 ; i<11 ; i++)
+	{
+		//console.log(TFLArray[i])
+		//var a=TFLArray[1].split(":")
+		//console.log(a)
+		if (TFLArray[i]!="Good Service")//.split(": ")[1]=="Good Service")
+		{
+			return "Hello World"
+		}
+	}
+	return("Hellow")
 
+}
 
 //==================================
 //=============== MAIN =============
@@ -172,50 +187,56 @@ getDayofWeek(day) {
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
-					<div class={ style.city }>{ this.state.locate} {this.state.country }</div>
-					<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp }</span>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<div class = {style.forecasts} >
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d1code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d1temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d1cond}	</span>
-							<span> {this.state.d1day}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d2code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d2temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d2cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d3code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d3temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d3cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d4code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d4temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d4cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d5code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d5temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d5cond}	</span>
-
-						</div>
+					<div class={ style.city }>
+						{ this.state.locate} {this.state.country }
 					</div>
+					<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp }</span>
+					<div class={ style.conditions }>
+						{ this.state.cond }
+					</div>
+					<div class = {style.forecasts} >
+						<table  >
+
+							<tr>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d1code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d2code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d3code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d4code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d5code)} /></td>
+							</tr>
+
+							<tr>
+
+								<td><span class = {forecastStyles}> {this.state.d1temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d2temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d3temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d4temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d5temp}	</span></td>
+							</tr>
+
+							<tr>
+								<td><span class = { style.conditions }> {this.state.d1cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d2cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d3cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d4cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d5cond}	</span></td>
+							</tr>
+						</table>
+					</div>
+				<div class={ style.details }>
+					{this.tfl_get()}
 				</div>
-				<div class={ style.details }> </div>
+
 				<div class= { style_iphone.container }>
 					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchAPIs } /> : null }
 				</div>
+			</div>
 			</div>
 		);
 	}
 
 //==================================
 //==================================
-
 
 
 	parseWeatherResponse = (parsed_json) => {
@@ -240,26 +261,26 @@ getDayofWeek(day) {
 
 
 	parseForecastResponse = (parsed_json) => {
-		var day1temp = parsed_json['list'] ['0'] ['main'] ['temp'];
+		var day1temp = Math.round(parsed_json['list'] ['0'] ['main'] ['temp']);
 		var day1conditions = parsed_json['list'] ['0'] ['weather']['0']['description'];
 		var day1condCode = parsed_json['list'] ['0'] ['weather']['0']['id'];
 
 		var day1 = (parsed_json['list']['0']['dt_txt']); // ?????
 
 
-		var day2temp = parsed_json['list'] ['8'] ['main'] ['temp'];
+		var day2temp = Math.round(parsed_json['list'] ['8'] ['main'] ['temp']);
 		var day2conditions = parsed_json['list'] ['8'] ['weather']['0']['description'];
 		var day2condCode = parsed_json['list'] ['8'] ['weather']['0']['id'];
 
-		var day3temp = parsed_json['list'] ['16'] ['main'] ['temp'];
+		var day3temp = Math.round(parsed_json['list'] ['16'] ['main'] ['temp']);
 		var day3conditions = parsed_json['list'] ['16'] ['weather']['0']['description'];
 		var day3condCode = parsed_json['list'] ['16'] ['weather']['0']['id'];
 
-		var day4temp = parsed_json['list'] ['24'] ['main'] ['temp'];
+		var day4temp = Math.round(parsed_json['list'] ['24'] ['main'] ['temp']);
 		var day4conditions = parsed_json['list'] ['24'] ['weather']['0']['description'];
 		var day4condCode = parsed_json['list'] ['24'] ['weather']['0']['id'];
 
-		var day5temp = parsed_json['list'] ['32'] ['main'] ['temp'];
+		var day5temp = Math.round(parsed_json['list'] ['32'] ['main'] ['temp']);
 		var day5conditions = parsed_json['list'] ['32'] ['weather']['0']['description'];
 		var day5condCode = parsed_json['list'] ['32'] ['weather']['0']['id'];
 
@@ -295,12 +316,17 @@ getDayofWeek(day) {
 
 
 	parseTFLResponse = (parsed_json) => {
-		var tflstatus = parsed_json['0']['name'];
-		var tfltest = "HELLO WORLD";
+			for (var i =0 ; i<11 ; i++){
+				TFLArray[i] = (parsed_json[i.toString()]['name'] + ":" + parsed_json[i.toString()]['lineStatuses']['0']['statusSeverityDescription'])
 
-		this.setState({
-			tfl: tflstatus,
-			tfltest: tfltest
-		});
-	}
+			for (var j =0 ; j<11 ; j++)
+			{
+				console.log(TFLArray[j])
+			}
+			this.setState({
+				tfl: TFLArray
+
+				});
+			}
+		}
 }
