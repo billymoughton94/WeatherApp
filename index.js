@@ -6,8 +6,6 @@ import style_iphone from '../button/style_iphone';
 // import jquery for API calls
 import $ from 'jquery';
 // import the Button component
-import Button from '../button';
-
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
 
@@ -17,12 +15,14 @@ export default class Iphone extends Component {
 		// temperature state
 		this.state.temp = "";
 		// button display state
-		this.setState({ display: true});
+		this.setState({display:true});
+		this.fetchAPIs()
+
 	}
 
 	//=======================================
 	//=============== API FETCH =============
-	fetchAPIs = () => {
+	fetchAPIs (){
 		this.fetchWeatherData.call();
 		this.fetchForecastData.call();
 		this.fetchTflData.call();
@@ -37,16 +37,13 @@ export default class Iphone extends Component {
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
 		this.setState({visibleImg : true});
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=dc5c2808dc2c8fd769f66c7deaae5130";
+		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
 			success : this.parseWeatherResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-		// once the data grabbed, hide the button
-		this.setState({ display: false});
-
 	}
 //============================================================
 //============================================================
@@ -54,7 +51,7 @@ export default class Iphone extends Component {
 //============================================================
 //=============== FORCAST DATA FETCH AND DISPLAY =============
 	fetchForecastData = () => {
-		var url = "http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&APPID=dc5c2808dc2c8fd769f66c7deaae5130";
+		var url = "http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -144,19 +141,23 @@ export default class Iphone extends Component {
 //==========================================
 //=============== GET WEEKEDAY =============
 
-getDayofWeek(day) {
-	switch(day) {
-		case 0: return "Sunday";
-		case 1: return "Monday";
-		case 2: return "Tuesday";
-		case 3: return "Wednesday";
-		case 4: return "Thursday";
-		case 5: return "Friday";
-		case 6 : return "Saturday";
-	}
+getDayofWeek(day)
+{
+	switch(day)
+		{
+			case 0: return "Sunday";
+			case 1: return "Monday";
+			case 2: return "Tuesday";
+			case 3: return "Wednesday";
+			case 4: return "Thursday";
+			case 5: return "Friday";
+			case 6: return "Saturday";
+			default: return;
+		}
 }
 //==========================================
 //==========================================
+
 
 
 //==================================
@@ -168,47 +169,54 @@ getDayofWeek(day) {
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
 
-		// display all weather data
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
-					<div class={ style.city }>{ this.state.locate} {this.state.country }</div>
-					<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp }</span>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<div class = {style.forecasts} >
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d1code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d1temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d1cond}	</span>
-							<span> {this.state.d1day}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d2code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d2temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d2cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d3code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d3temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d3cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d4code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d4temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d4cond}	</span>
-						</div>
-						<div>
-							<img src = {this.forecastWeatherSymbol(this.state.d5code)} /> <br/>
-							<span class = {forecastStyles}> {this.state.d5temp}	</span> <br/>
-							<span class = { style.conditions }> {this.state.d5cond}	</span>
-
-						</div>
+					<div class={ style.city }>
+						{ this.state.locate}, {this.state.country }
 					</div>
-				</div>
-				<div class={ style.details }> </div>
-				<div class= { style_iphone.container }>
-					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchAPIs } /> : null }
-				</div>
+					<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp }</span>
+					<div class={ style.conditions }>
+						{ this.state.cond }
+					</div>
+					<div class = {style.forecasts} >
+						<table>
+							<tr>
+								<td>{this.state.d1day}</td>
+								<td>{this.state.d2day}</td>
+								<td>{this.state.d3day}</td>
+								<td>{this.state.d4day}</td>
+								<td>{this.state.d5day}</td>
+
+							</tr>
+							<tr>
+							  <td><img src = {this.forecastWeatherSymbol(this.state.d1code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d2code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d3code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d4code)} /></td>
+								<td><img src = {this.forecastWeatherSymbol(this.state.d5code)} /></td>
+							</tr>
+
+							<tr>
+
+								<td><span class = {forecastStyles}> {this.state.d1temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d2temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d3temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d4temp}	</span></td>
+								<td><span class = {forecastStyles}> {this.state.d5temp}	</span></td>
+							</tr>
+
+							<tr>
+								<td><span class = { style.conditions }> {this.state.d1cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d2cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d3cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d4cond}	</span></td>
+								<td><span class = { style.conditions }> {this.state.d5cond}	</span></td>
+							</tr>
+						</table>
+					</div>
+			</div>
+
 			</div>
 		);
 	}
@@ -217,14 +225,13 @@ getDayofWeek(day) {
 //==================================
 
 
-
 	parseWeatherResponse = (parsed_json) => {
 		var location = parsed_json['name'];
 		var countryName = parsed_json['sys']['country'];
 		var temp_c = parseInt(parsed_json['main']['temp']);
 		var conditions = parsed_json['weather']['0']['description'];
 		var condCode = parsed_json['weather']['0']['id'];
-
+this.state.tfl
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
@@ -235,72 +242,103 @@ getDayofWeek(day) {
 		});
 	}
 
-
-
-
-
 	parseForecastResponse = (parsed_json) => {
-		var day1temp = parsed_json['list'] ['0'] ['main'] ['temp'];
+		var day1temp = Math.round(parsed_json['list'] ['0'] ['main'] ['temp']);
 		var day1conditions = parsed_json['list'] ['0'] ['weather']['0']['description'];
 		var day1condCode = parsed_json['list'] ['0'] ['weather']['0']['id'];
+		var day1=(parsed_json['list']['5']['dt_txt'])
+		var day1_n=new Date(day1)
+		var b = day1.split("-")
+	  var j = b[2].split(" ")
+		var day1_t= this.getDayofWeek(day1_n.getDay())+ " " + j[0]
 
-		var day1 = (parsed_json['list']['0']['dt_txt']); // ?????
 
-
-		var day2temp = parsed_json['list'] ['8'] ['main'] ['temp'];
+		var day2temp = Math.round(parsed_json['list'] ['8'] ['main'] ['temp']);
 		var day2conditions = parsed_json['list'] ['8'] ['weather']['0']['description'];
 		var day2condCode = parsed_json['list'] ['8'] ['weather']['0']['id'];
+		var day2=(parsed_json['list']['13']['dt_txt'])
+		var day2_n=new Date(day2)
+		var b = day2.split("-")
+	  var j = b[2].split(" ")
+		var day2_t= this.getDayofWeek(day2_n.getDay())+ " " + j[0]
 
-		var day3temp = parsed_json['list'] ['16'] ['main'] ['temp'];
+
+		var day3temp = Math.round(parsed_json['list'] ['16'] ['main'] ['temp']);
 		var day3conditions = parsed_json['list'] ['16'] ['weather']['0']['description'];
 		var day3condCode = parsed_json['list'] ['16'] ['weather']['0']['id'];
+		var day3 = (parsed_json['list']['21']['dt_txt'])
+		var day3_n=new Date(day3)
+		var b = day3.split("-")
+	  var j = b[2].split(" ")
+		var day3_t= this.getDayofWeek(day3_n.getDay())+ " " + j[0]
 
-		var day4temp = parsed_json['list'] ['24'] ['main'] ['temp'];
+		var day4temp = Math.round(parsed_json['list'] ['24'] ['main'] ['temp']);
 		var day4conditions = parsed_json['list'] ['24'] ['weather']['0']['description'];
 		var day4condCode = parsed_json['list'] ['24'] ['weather']['0']['id'];
+		var day4=(parsed_json['list']['29']['dt_txt'])
+		var day4_n=new Date(day4)
+		var b = day4.split("-")
+		var j = b[2].split(" ")
+		var day4_t= this.getDayofWeek(day4_n.getDay())+ " " + j[0]
 
-		var day5temp = parsed_json['list'] ['32'] ['main'] ['temp'];
+		var day5temp = Math.round(parsed_json['list'] ['32'] ['main'] ['temp']);
 		var day5conditions = parsed_json['list'] ['32'] ['weather']['0']['description'];
 		var day5condCode = parsed_json['list'] ['32'] ['weather']['0']['id'];
+		var day5 = (parsed_json['list']['38']['dt_txt'])
+		var day5_n=new Date(day5)
+		var b = day5.split("-")
+		var j = b[2].split(" ")
+		var day5_t= this.getDayofWeek(day5_n.getDay())+ " " + j[0]
 
 
 		this.setState({
 			d1temp : day1temp,
 			d1cond : day1conditions,
 			d1code : day1condCode,
-			d1day : day1,
+			d1day  : day1_t,
 
 			d2temp : day2temp,
 			d2cond : day2conditions,
 			d2code : day2condCode,
+			d2day  : day2_t,
 
 			d3temp : day3temp,
 			d3cond : day3conditions,
 			d3code : day3condCode,
+			d3day  : day3_t,
 
 			d4temp : day4temp,
 			d4cond : day4conditions,
 			d4code : day4condCode,
+			d4day  : day4_t,
 
 			d5temp : day5temp,
 			d5cond : day5conditions,
 			d5code : day5condCode,
+			d5day  : day5_t
 		});
 	}
 
 
+	parseTFLResponse = (parsed_json) =>
+	{
 
+			let arr = parsed_json.map((x) => {
+				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
+				let name = x['name'];
+				return {
+					name,
+					desc
+				}
+			})
+			console.log(arr)
 
+			let arr_f = arr.filter((x) => {
+				return x.desc == "Good Service"
+			})
 
-
-
-	parseTFLResponse = (parsed_json) => {
-		var tflstatus = parsed_json['0']['name'];
-		var tfltest = "HELLO WORLD";
-
-		this.setState({
-			tfl: tflstatus,
-			tfltest: tfltest
-		});
+			this.setState({
+				tfl:arr_f
+			});
 	}
 }
