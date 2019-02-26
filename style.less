@@ -1,14 +1,14 @@
 @import '~style/helpers';
 
 .container {
-	display: flex;
+	//display: flex;
 	flex-direction: column;
 	background-image: url('../../assets/backgrounds/BG_light.png');
 	color: #fff;
 	width: 414px;
 	height: 736px;
 	text-align: center;
-	padding-top: 80px;
+	padding-top: 50px;
 	margin: 0 auto;
 }
 .header {
@@ -40,20 +40,28 @@
 	flex: 2;
 	margin-top: 0;
 	font-size: 1em;
-	font-weight: 600;
-	letter-spacing: 1px;
-	display : flex;
-	margin : 10px;
-
+	font-weight: 400;
+	margin : 1px;
 }
-
 
 .filled:after {
 	content: "°C";
-	margin: 0 0 0 1rem;
+	//margin-left: 0px;
 	font-size: 0.8em;
 	font-weight: 900;
 	display: inline-block;
-	padding-top: 10px;
+	//padding-top: 10px;
 	vertical-align: top;
+}
+
+.tflContainer {
+	position: relative;
+	text-align: center;
+	padding-top: 10px;
+}
+
+.TEXT {
+	position: absolute;
+	color: black;
+	text-align: center;
 }
