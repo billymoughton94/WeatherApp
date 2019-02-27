@@ -162,6 +162,10 @@ getDayofWeek(day)
 //==========================================
 //==========================================
 
+getTime() { // EDIT THIS
+	var date = new Date();
+	return date.getHours();
+}
 
 
 //==================================
@@ -172,9 +176,9 @@ getDayofWeek(day)
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
-
+		var time = this.getTime();
 		return (
-			<div class={ style.container }>
+			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
 				<div class={ style.header }>
 					<div class={ style.city }>
 						{ this.state.locate}, {this.state.country }
