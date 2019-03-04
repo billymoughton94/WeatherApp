@@ -253,17 +253,15 @@ getTime() { // EDIT THIS
 		var time = this.getTime();
 		return (
 			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
-			<button onClick = {this.state.toggle ? this.celToFarConvert : this.farToCelConvert }> CHANGE TEMP </button>
 				<div class={ style.header }>
 					<div class={ style.city }>
 						{ this.state.locate}, {this.state.country }
 					</div>
-					<div>
+					<div style = "height: 90px;">
 						<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
-						{/*<div class = {style.units}>
-						<span> C </span> <br/>
-							<span> F </span>
-						</div>*/}
+						<div class = {style.units}>
+							<h1 onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1> 		<h1 onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
+						</div>
 					</div>
 					<div class={ style.conditions }>
 						{ this.state.cond }
@@ -427,7 +425,7 @@ getTime() { // EDIT THIS
 			})
 
 			if (tflLinesAffected.length == 0) {
-				tflList =  <p style = "background-color: green;">All lines are in good service</p>;
+				tflList =  <p style = "background-color: green; margin: 0;">All lines are in good service</p>;
 			}
 			else {
 			 tflList = tflLinesAffected.map(item =>
