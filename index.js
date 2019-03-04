@@ -14,6 +14,8 @@ export default class Iphone extends Component {
 		super(props);
 		// temperature state
 		this.state.temp = "";
+		this.state.celColour = 'white';
+		this.state.farColour = 'grey';
 		// button display state
 		this.setState({display:true, toggle: true});
 		this.fetchAPIs();
@@ -191,7 +193,9 @@ celToFarConvert() {
 		d3temp: newd3Temp,
 		d4temp: newd4Temp,
 		d5temp: newd5Temp,
-		toggle: false
+		toggle: false,
+		celColour: "grey",
+		farColour: "white"
 	});
 }
 //=============================================
@@ -224,7 +228,9 @@ farToCelConvert() {
 		d3temp: newd3Temp,
 		d4temp: newd4Temp,
 		d5temp: newd5Temp,
-		toggle: true
+		toggle: true,
+		farColour: "grey",
+		celColour: "white"
 	});
 }
 
@@ -259,9 +265,18 @@ getTime() { // EDIT THIS
 					</div>
 					<div style = "height: 90px;">
 						<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
+
+
+
+
 						<div class = {style.units}>
-							<h1 onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1> 		<h1 onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
+							<h1 style = {{color: this.state.celColour}}	onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1>
+							<h1 style = {{color: this.state.farColour}} onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
 						</div>
+
+
+
+
 					</div>
 					<div class={ style.conditions }>
 						{ this.state.cond }
