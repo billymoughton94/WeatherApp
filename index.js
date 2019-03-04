@@ -175,28 +175,16 @@ celToFarConvert() {
 	var newMainTemp = (this.state.temp * (9/5)) + 32;
 	newMainTemp = Math.round(newMainTemp);
 
-	var newd1Temp = (this.state.d1temp * (9/5)) + 32;
-	newd1Temp = Math.round(newd1Temp);
-
-	var newd2Temp = (this.state.d2temp * (9/5)) + 32;
-	newd2Temp = Math.round(newd2Temp);
-
-	var newd3Temp = (this.state.d3temp * (9/5)) + 32;
-	newd3Temp = Math.round(newd3Temp);
-
-	var newd4Temp = (this.state.d4temp * (9/5)) + 32;
-	newd4Temp = Math.round(newd4Temp);
-
-	var newd5Temp = (this.state.d5temp * (9/5)) + 32;
-	newd5Temp = Math.round(newd5Temp);
+	var newVals = this.state.forecasts.slice();
+	 newVals = newVals.map((item) => {
+		item = (item * (9/5)) + 32;
+		item = Math.round(item);
+		return item;
+	})
 
 	this.setState({
 		temp: newMainTemp,
-		d1temp: newd1Temp,
-		d2temp: newd2Temp,
-		d3temp: newd3Temp,
-		d4temp: newd4Temp,
-		d5temp: newd5Temp,
+		forecasts: newVals,
 		toggle: false,
 		celColour: "grey",
 		farColour: "white"
@@ -209,29 +197,16 @@ farToCelConvert() {
 	var newMainTemp = (this.state.temp - 32) * (5/9) ;
 	newMainTemp = Math.round(newMainTemp);
 
-
-	var newd1Temp = (this.state.d1temp - 32) * (5/9) ;
-	newd1Temp = Math.round(newd1Temp);
-
-	var newd2Temp = (this.state.d2temp - 32) * (5/9) ;
-	newd2Temp = Math.round(newd2Temp);
-
-	var newd3Temp = (this.state.d3temp - 32) * (5/9) ;
-	newd3Temp = Math.round(newd3Temp);
-
-	var newd4Temp = (this.state.d4temp - 32) * (5/9) ;
-	newd4Temp = Math.round(newd4Temp);
-
-	var newd5Temp = (this.state.d5temp - 32) * (5/9) ;
-	newd5Temp = Math.round(newd5Temp);
+	var newVals = this.state.forecasts.slice();
+	 newVals = newVals.map((item) => {
+		item = (item - 32) * (5/9);
+		item = Math.round(item);
+		return item;
+	})	
 
 	this.setState({
 		temp: newMainTemp,
-		d1temp: newd1Temp,
-		d2temp: newd2Temp,
-		d3temp: newd3Temp,
-		d4temp: newd4Temp,
-		d5temp: newd5Temp,
+		forecasts: newVals,
 		toggle: true,
 		farColour: "grey",
 		celColour: "white"
