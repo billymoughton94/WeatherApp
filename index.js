@@ -285,7 +285,7 @@ getTime() { // EDIT THIS
 									</tr>
 									<tr>
 										{this.state.condImages.map((item, key) => {
-										return <td key={key}>{<img src = {this.forecastWeatherSymbol(item)}}</td>
+										return <td key={key}>{<img src = {this.forecastWeatherSymbol(item)}/>}</td>
 										})}
 									</tr>
 									<tr>
@@ -296,7 +296,7 @@ getTime() { // EDIT THIS
 
 									<tr>
 										{this.state.conds.map((item, key) => {
-										return <td class = {style.conditions} key = {key}> {item} </td>
+										return <td style = "width: 80px;" key = {key}> {item} </td>
 										})}
 									</tr>
 								</table>
