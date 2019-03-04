@@ -16,6 +16,7 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		this.state.celColour = 'white';
 		this.state.farColour = 'grey';
+		this.state.d = [];
 		// button display state
 		this.setState({display:true, toggle: true});
 		this.fetchAPIs();
@@ -257,69 +258,69 @@ getTime() { // EDIT THIS
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
 		var time = this.getTime();
-		return (
-			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
-				<div class={ style.header }>
-					<div class={ style.city }>
-						{ this.state.locate}, {this.state.country }
-					</div>
-					<div style = "height: 90px;">
-						<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
+		let main = (<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+						<div class={ style.header }>
+							<div class={ style.city }>
+								{ this.state.locate}, {this.state.country }
+							</div>
+							<div style = "height: 90px;">
+								<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
 
 
 
 
-						<div class = {style.units}>
-							<h1 style = {{color: this.state.celColour}}	onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1>
-							<h1 style = {{color: this.state.farColour}} onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
+								<div class = {style.units}>
+									<h1 style = {{color: this.state.celColour}}	onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1>
+									<h1 style = {{color: this.state.farColour}} onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
+								</div>
+
+
+
+
+							</div>
+							<div class={ style.conditions }>
+								{ this.state.cond }
+							</div>
+							<div class = {style.forecasts} >
+								<table>
+									<tr>
+										{this.state.d.map((item, key) => {
+											return <td key={key}>{item}</td>
+										})}
+									</tr>
+									<tr>
+									  <td><img src = {this.forecastWeatherSymbol(this.state.d1code)} /></td>
+										<td><img src = {this.forecastWeatherSymbol(this.state.d2code)} /></td>
+										<td><img src = {this.forecastWeatherSymbol(this.state.d3code)} /></td>
+										<td><img src = {this.forecastWeatherSymbol(this.state.d4code)} /></td>
+										<td><img src = {this.forecastWeatherSymbol(this.state.d5code)} /></td>
+									</tr>
+
+									<tr>
+										<td><span class = {forecastStyles}> {this.state.d1temp}	</span></td>
+										<td><span class = {forecastStyles}> {this.state.d2temp}	</span></td>
+										<td><span class = {forecastStyles}> {this.state.d3temp}	</span></td>
+										<td><span class = {forecastStyles}> {this.state.d4temp}	</span></td>
+										<td><span class = {forecastStyles}> {this.state.d5temp}	</span></td>
+									</tr>
+
+									<tr>
+										<td><span class = { style.conditions }> {this.state.d1cond}	</span></td>
+										<td><span class = { style.conditions }> {this.state.d2cond}	</span></td>
+										<td><span class = { style.conditions }> {this.state.d3cond}	</span></td>
+										<td><span class = { style.conditions }> {this.state.d4cond}	</span></td>
+										<td><span class = { style.conditions }> {this.state.d5cond}	</span></td>
+									</tr>
+								</table>
+							</div>
+							<div style = "overflow: auto; height: 350px;">
+								{this.state.tfl}
+							</div>
 						</div>
-
-
-
-
-					</div>
-					<div class={ style.conditions }>
-						{ this.state.cond }
-					</div>
-					<div class = {style.forecasts} >
-						<table>
-							<tr>
-								<td>{this.state.d1day}</td>
-								<td>{this.state.d2day}</td>
-								<td>{this.state.d3day}</td>
-								<td>{this.state.d4day}</td>
-								<td>{this.state.d5day}</td>
-							</tr>
-							<tr>
-							  <td><img src = {this.forecastWeatherSymbol(this.state.d1code)} /></td>
-								<td><img src = {this.forecastWeatherSymbol(this.state.d2code)} /></td>
-								<td><img src = {this.forecastWeatherSymbol(this.state.d3code)} /></td>
-								<td><img src = {this.forecastWeatherSymbol(this.state.d4code)} /></td>
-								<td><img src = {this.forecastWeatherSymbol(this.state.d5code)} /></td>
-							</tr>
-
-							<tr>
-								<td><span class = {forecastStyles}> {this.state.d1temp}	</span></td>
-								<td><span class = {forecastStyles}> {this.state.d2temp}	</span></td>
-								<td><span class = {forecastStyles}> {this.state.d3temp}	</span></td>
-								<td><span class = {forecastStyles}> {this.state.d4temp}	</span></td>
-								<td><span class = {forecastStyles}> {this.state.d5temp}	</span></td>
-							</tr>
-
-							<tr>
-								<td><span class = { style.conditions }> {this.state.d1cond}	</span></td>
-								<td><span class = { style.conditions }> {this.state.d2cond}	</span></td>
-								<td><span class = { style.conditions }> {this.state.d3cond}	</span></td>
-								<td><span class = { style.conditions }> {this.state.d4cond}	</span></td>
-								<td><span class = { style.conditions }> {this.state.d5cond}	</span></td>
-							</tr>
-						</table>
-					</div>
-					<div style = "overflow: auto; height: 350px;">
-						{this.state.tfl}
-					</div>
-				</div>
-			</div>
+					</div>);
+					let otherPage = (<div><p>{JSON.stringify(this.state.d)}</p></div>)
+		return (
+			<span>{true ? main : otherPage}</span>
 		);
 	}
 
@@ -344,6 +345,9 @@ getTime() { // EDIT THIS
 	}
 
 	parseForecastResponse = (parsed_json) => {
+		this.setState({
+			d: []
+		})
 		var day1temp = Math.round(parsed_json['list'] ['0'] ['main'] ['temp']);
 		var day1conditions = parsed_json['list'] ['0'] ['weather']['0']['description'];
 		var day1condCode = parsed_json['list'] ['0'] ['weather']['0']['id'];
@@ -391,8 +395,15 @@ getTime() { // EDIT THIS
 		var j = b[2].split(" ")
 		var day5_t= this.getDayofWeek(day5_n.getDay())+ " " + j[0]
 
-
+		let day = [];
+		day.push(day1_t);
+		day.push(day2_t);
+		day.push(day3_t);
+		day.push(day4_t);
+		day.push(day5_t);
+		console.log(day)
 		this.setState({
+			d:day,
 			d1temp : day1temp,
 			d1cond : day1conditions,
 			d1code : day1condCode,
