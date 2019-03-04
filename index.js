@@ -15,9 +15,10 @@ export default class Iphone extends Component {
 		// temperature state
 		this.state.temp = "";
 		// button display state
-		this.setState({display:true});
-		this.fetchAPIs()
-
+		this.setState({display:true, toggle: true});
+		this.fetchAPIs();
+		this.celToFarConvert = this.celToFarConvert.bind(this);
+		this.farToCelConvert = this.farToCelConvert.bind(this);
 	}
 
 	//=======================================
@@ -36,7 +37,6 @@ export default class Iphone extends Component {
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		this.setState({visibleImg : true});
 		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
@@ -67,7 +67,7 @@ export default class Iphone extends Component {
 //============================================================
 //=============== TFL DATA FETCH AND DISPLAY =============
 	fetchTflData = () => {
-		var url = "https://api.tfl.gov.uk/Line/Mode/tube/Status?detail=true&app_id=2cf7f9a8&app_key=%20%20%20%2001aef9b37ed476700c32051e34bc4b83";
+		var url = "https://api.tfl.gov.uk/Line/Mode/tube%2Cdlr%2Coverground/Status?detail=true&app_id=2cf7f9a8&app_key=%20%20%20%2001aef9b37ed476700c32051e34bc4b83";
 		$.ajax({
 			url: url,
 			dataType: "json",
@@ -162,10 +162,84 @@ getDayofWeek(day)
 //==========================================
 //==========================================
 
+
+//==============TEMPERATURE CONVERT========================
+//=============================================
+celToFarConvert() {
+	var newMainTemp = (this.state.temp * (9/5)) + 32;
+	newMainTemp = Math.round(newMainTemp);
+
+	var newd1Temp = (this.state.d1temp * (9/5)) + 32;
+	newd1Temp = Math.round(newd1Temp);
+
+	var newd2Temp = (this.state.d2temp * (9/5)) + 32;
+	newd2Temp = Math.round(newd2Temp);
+
+	var newd3Temp = (this.state.d3temp * (9/5)) + 32;
+	newd3Temp = Math.round(newd3Temp);
+
+	var newd4Temp = (this.state.d4temp * (9/5)) + 32;
+	newd4Temp = Math.round(newd4Temp);
+
+	var newd5Temp = (this.state.d5temp * (9/5)) + 32;
+	newd5Temp = Math.round(newd5Temp);
+
+	this.setState({
+		temp: newMainTemp,
+		d1temp: newd1Temp,
+		d2temp: newd2Temp,
+		d3temp: newd3Temp,
+		d4temp: newd4Temp,
+		d5temp: newd5Temp,
+		toggle: false
+	});
+}
+//=============================================
+//=============================================
+
+farToCelConvert() {
+	var newMainTemp = (this.state.temp - 32) * (5/9) ;
+	newMainTemp = Math.round(newMainTemp);
+
+
+	var newd1Temp = (this.state.d1temp - 32) * (5/9) ;
+	newd1Temp = Math.round(newd1Temp);
+
+	var newd2Temp = (this.state.d2temp - 32) * (5/9) ;
+	newd2Temp = Math.round(newd2Temp);
+
+	var newd3Temp = (this.state.d3temp - 32) * (5/9) ;
+	newd3Temp = Math.round(newd3Temp);
+
+	var newd4Temp = (this.state.d4temp - 32) * (5/9) ;
+	newd4Temp = Math.round(newd4Temp);
+
+	var newd5Temp = (this.state.d5temp - 32) * (5/9) ;
+	newd5Temp = Math.round(newd5Temp);
+
+	this.setState({
+		temp: newMainTemp,
+		d1temp: newd1Temp,
+		d2temp: newd2Temp,
+		d3temp: newd3Temp,
+		d4temp: newd4Temp,
+		d5temp: newd5Temp,
+		toggle: true
+	});
+}
+
+
+
+
+//=============GET TIME=================
+//=======================================
 getTime() { // EDIT THIS
 	var date = new Date();
 	return date.getHours();
 }
+
+//=======================================
+//=======================================
 
 
 //==================================
@@ -179,11 +253,18 @@ getTime() { // EDIT THIS
 		var time = this.getTime();
 		return (
 			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+			<button onClick = {this.state.toggle ? this.celToFarConvert : this.farToCelConvert }> CHANGE TEMP </button>
 				<div class={ style.header }>
 					<div class={ style.city }>
 						{ this.state.locate}, {this.state.country }
 					</div>
-					<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp }</span>
+					<div>
+						<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
+						{/*<div class = {style.units}>
+						<span> C </span> <br/>
+							<span> F </span>
+						</div>*/}
+					</div>
 					<div class={ style.conditions }>
 						{ this.state.cond }
 					</div>
@@ -224,7 +305,7 @@ getTime() { // EDIT THIS
 					<div style = "overflow: auto; height: 350px;">
 						{this.state.tfl}
 					</div>
-					</div>
+				</div>
 			</div>
 		);
 	}
@@ -334,7 +415,8 @@ getTime() { // EDIT THIS
 			let tflLines = parsed_json.map((x) => {
 				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
 				let name = x['name'];
-				return {name,desc}
+				let res = x['lineStatuses'] ['0'] ['reason'];
+				return {name,desc, res}
 			})
 
 
@@ -351,7 +433,7 @@ getTime() { // EDIT THIS
 			 tflList = tflLinesAffected.map(item =>
 				<div class = {style.tflContainer}>
 					<img src = '../../assets/icons/Bubble1.png' />
-						<div class = {style.TEXT}> {item.name} : {item.desc}</div>
+						<div class = {style.TEXT}>{item.res}</div>
 				</div>)
 			}
 
