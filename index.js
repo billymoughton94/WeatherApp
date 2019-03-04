@@ -16,7 +16,10 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		this.state.celColour = 'white';
 		this.state.farColour = 'grey';
-		this.state.d = [];
+		this.state.forecasts = [];
+		this.state.days = [];
+		this.state.conds = [];
+		this.state.condImages = [];
 		// button display state
 		this.setState({display:true, toggle: true});
 		this.fetchAPIs();
@@ -152,13 +155,13 @@ getDayofWeek(day)
 {
 	switch(day)
 		{
-			case 0: return "Sunday";
-			case 1: return "Monday";
-			case 2: return "Tuesday";
-			case 3: return "Wednesday";
-			case 4: return "Thursday";
-			case 5: return "Friday";
-			case 6: return "Saturday";
+			case 0: return "Sun";
+			case 1: return "Mon";
+			case 2: return "Tue";
+			case 3: return "Wed";
+			case 4: return "Thu";
+			case 5: return "Fri";
+			case 6: return "Sat";
 			default: return;
 		}
 }
@@ -265,18 +268,10 @@ getTime() { // EDIT THIS
 							</div>
 							<div style = "height: 90px;">
 								<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
-
-
-
-
 								<div class = {style.units}>
 									<h1 style = {{color: this.state.celColour}}	onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1>
 									<h1 style = {{color: this.state.farColour}} onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
 								</div>
-
-
-
-
 							</div>
 							<div class={ style.conditions }>
 								{ this.state.cond }
@@ -284,32 +279,25 @@ getTime() { // EDIT THIS
 							<div class = {style.forecasts} >
 								<table>
 									<tr>
-										{this.state.d.map((item, key) => {
+										{this.state.days.map((item, key) => {
 											return <td key={key}>{item}</td>
 										})}
 									</tr>
 									<tr>
-									  <td><img src = {this.forecastWeatherSymbol(this.state.d1code)} /></td>
-										<td><img src = {this.forecastWeatherSymbol(this.state.d2code)} /></td>
-										<td><img src = {this.forecastWeatherSymbol(this.state.d3code)} /></td>
-										<td><img src = {this.forecastWeatherSymbol(this.state.d4code)} /></td>
-										<td><img src = {this.forecastWeatherSymbol(this.state.d5code)} /></td>
+										{this.state.condImages.map((item, key) => {
+										return <td key={key}>{<img src = {this.forecastWeatherSymbol(item)}}</td>
+										})}
+									</tr>
+									<tr>
+										{this.state.forecasts.map((item, key) => {
+											return <td class = {forecastStyles} key = {key}> {item} </td>
+										})}
 									</tr>
 
 									<tr>
-										<td><span class = {forecastStyles}> {this.state.d1temp}	</span></td>
-										<td><span class = {forecastStyles}> {this.state.d2temp}	</span></td>
-										<td><span class = {forecastStyles}> {this.state.d3temp}	</span></td>
-										<td><span class = {forecastStyles}> {this.state.d4temp}	</span></td>
-										<td><span class = {forecastStyles}> {this.state.d5temp}	</span></td>
-									</tr>
-
-									<tr>
-										<td><span class = { style.conditions }> {this.state.d1cond}	</span></td>
-										<td><span class = { style.conditions }> {this.state.d2cond}	</span></td>
-										<td><span class = { style.conditions }> {this.state.d3cond}	</span></td>
-										<td><span class = { style.conditions }> {this.state.d4cond}	</span></td>
-										<td><span class = { style.conditions }> {this.state.d5cond}	</span></td>
+										{this.state.conds.map((item, key) => {
+										return <td class = {style.conditions} key = {key}> {item} </td>
+										})}
 									</tr>
 								</table>
 							</div>
@@ -346,7 +334,10 @@ getTime() { // EDIT THIS
 
 	parseForecastResponse = (parsed_json) => {
 		this.setState({
-			d: []
+			forcasts: [],
+			days: [],
+			conds: [],
+			condImages: []
 		})
 		var day1temp = Math.round(parsed_json['list'] ['0'] ['main'] ['temp']);
 		var day1conditions = parsed_json['list'] ['0'] ['weather']['0']['description'];
@@ -395,39 +386,48 @@ getTime() { // EDIT THIS
 		var j = b[2].split(" ")
 		var day5_t= this.getDayofWeek(day5_n.getDay())+ " " + j[0]
 
+		////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////
+
+		// ARRAY FOR DAYS AND DATES
 		let day = [];
 		day.push(day1_t);
 		day.push(day2_t);
 		day.push(day3_t);
 		day.push(day4_t);
 		day.push(day5_t);
-		console.log(day)
+
+		//ARRAY FOR DAILY CONDITION IMAGES
+		let condCodes = [];
+		condCodes.push(day1condCode);
+		condCodes.push(day2condCode);
+		condCodes.push(day3condCode);
+		condCodes.push(day4condCode);
+		condCodes.push(day5condCode);
+
+
+		// ARRAY FOR FORECASTED TEMPS
+		let dailyForecasts = [];
+		dailyForecasts.push(day1temp);
+		dailyForecasts.push(day2temp);
+		dailyForecasts.push(day3temp);
+		dailyForecasts.push(day4temp);
+		dailyForecasts.push(day5temp);
+
+		// ARRAY FOR DAILY conditions
+		let dailyConditions = [];
+		dailyConditions.push(day1conditions);
+		dailyConditions.push(day2conditions);
+		dailyConditions.push(day3conditions);
+		dailyConditions.push(day4conditions);
+		dailyConditions.push(day5conditions);
+
+
 		this.setState({
-			d:day,
-			d1temp : day1temp,
-			d1cond : day1conditions,
-			d1code : day1condCode,
-			d1day  : day1_t,
-
-			d2temp : day2temp,
-			d2cond : day2conditions,
-			d2code : day2condCode,
-			d2day  : day2_t,
-
-			d3temp : day3temp,
-			d3cond : day3conditions,
-			d3code : day3condCode,
-			d3day  : day3_t,
-
-			d4temp : day4temp,
-			d4cond : day4conditions,
-			d4code : day4condCode,
-			d4day  : day4_t,
-
-			d5temp : day5temp,
-			d5cond : day5conditions,
-			d5code : day5condCode,
-			d5day  : day5_t
+			days: day,
+			forecasts: dailyForecasts,
+			conds: dailyConditions,
+			condImages: condCodes
 		});
 	}
 
