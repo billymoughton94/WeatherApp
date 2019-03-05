@@ -21,10 +21,11 @@ export default class Iphone extends Component {
 		this.state.conds = [];
 		this.state.condImages = [];
 		// button display state
-		this.setState({display:true, toggle: true});
 		this.fetchAPIs();
+		this.setState({display:true, toggle: true, toggle_page:true});
 		this.celToFarConvert = this.celToFarConvert.bind(this);
 		this.farToCelConvert = this.farToCelConvert.bind(this);
+		this.toggle_func = this.toggle_func.bind(this);
 	}
 
 	//=======================================
@@ -202,7 +203,7 @@ farToCelConvert() {
 		item = (item - 32) * (5/9);
 		item = Math.round(item);
 		return item;
-	})	
+	})
 
 	this.setState({
 		temp: newMainTemp,
@@ -225,7 +226,16 @@ getTime() { // EDIT THIS
 
 //=======================================
 //=======================================
-
+toggle_func(){
+	if (this.state.toggle_page==true)
+	{
+		this.setState({toggle_page:false})
+	}
+	else
+	{
+		this.setState({toggle_page:true})
+	}
+}
 
 //==================================
 //=============== MAIN =============
@@ -236,8 +246,7 @@ getTime() { // EDIT THIS
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
 		var time = this.getTime();
-		let main = (<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
-						<div class={ style.header }>
+		let main = (<div class={ style.header }>
 							<div class={ style.city }>
 								{ this.state.locate}, {this.state.country }
 							</div>
@@ -279,11 +288,24 @@ getTime() { // EDIT THIS
 							<div style = "overflow: auto; height: 350px;">
 								{this.state.tfl}
 							</div>
-						</div>
-					</div>);
-					let otherPage = (<div><p>{JSON.stringify(this.state.d)}</p></div>)
+							<div class={style.footer}>
+							<button onclick={this.toggle_func}>Settings</button>
+							</div>
+						</div>);
+		let otherPage = (
+						<div class={ style.header }>
+							<div class={ style.city }>
+								Settings
+							</div>
+
+							<div class={style.footer}>
+							<button onclick={this.toggle_func}>go back</button>
+							</div>
+						</div>);
 		return (
-			<span>{true ? main : otherPage}</span>
+			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+			<span>{this.state.toggle_page==true ? main : otherPage}</span>
+			</div>
 		);
 	}
 
@@ -409,13 +431,20 @@ getTime() { // EDIT THIS
 
 	parseTFLResponse = (parsed_json) =>
 	{
+		this.setState({
+			tfl_name:[]
+		})
 		let tflList;
+
+		let tflName=parsed_json.map((x)=>{
+			let name =x['name']
+			return {name}
+		})
 
 			let tflLines = parsed_json.map((x) => {
 				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
-				let name = x['name'];
 				let res = x['lineStatuses'] ['0'] ['reason'];
-				return {name,desc, res}
+				return {desc, res}
 			})
 
 
@@ -435,9 +464,17 @@ getTime() { // EDIT THIS
 						<div class = {style.TEXT}>{item.res}</div>
 				</div>)
 			}
+			// <form>
+			// 	{this.state.tfl_name.map((item,key) =>{
+			// 		return <input type = "checkbox" value={item} ></input>
+			// 	})}
+			// </form>
+			// need to add
+
 
 			this.setState({
-				tfl: tflList
+				tfl: tflList,
+				tfl_name: tflName
 			});
 	}
 }
