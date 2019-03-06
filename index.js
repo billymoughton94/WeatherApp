@@ -21,10 +21,12 @@ export default class Iphone extends Component {
 		this.state.conds = [];
 		this.state.condImages = [];
 		// button display state
-		this.setState({display:true, toggle: true});
 		this.fetchAPIs();
+		this.setState({display:true, toggle: true, toggle_page:true});
 		this.celToFarConvert = this.celToFarConvert.bind(this);
 		this.farToCelConvert = this.farToCelConvert.bind(this);
+		this.toggle_func = this.toggle_func.bind(this);
+		this.fetchLocation  = this.fetchLocation.bind(this,'paramater');
 	}
 
 	//=======================================
@@ -33,9 +35,28 @@ export default class Iphone extends Component {
 		this.fetchWeatherData.call();
 		this.fetchForecastData.call();
 		this.fetchTflData.call();
+		this.fetchLocation.call();
 	}
-	//=======================================
-	//=======================================
+//=======================================================
+//=======================================================
+
+fetchLocation= ()=>{
+	let a =navigator.geolocation.getCurrentPosition((pos)=>
+	{
+		var crd=pos.coords;
+		var lat= crd.latitude;
+		var long = crd.longitude
+		var url ="https://api.opencagedata.com/geocode/v1/json?q="+lat+"%2C"+long+"&key=8a1a6919cb5c4c778263f39ee5503d98&pretty=1"
+		$.ajax({
+			url: url,
+			dataType: "jsonp",
+			success : this.parseLocationResponse,
+			error : function(req, err){ console.log('API call failed ' + err); }
+		})
+
+	})
+
+}
 
 //============================================================
 //=============== WEATHER DATA FETCH AND DISPLAY =============
@@ -202,7 +223,7 @@ farToCelConvert() {
 		item = (item - 32) * (5/9);
 		item = Math.round(item);
 		return item;
-	})	
+	})
 
 	this.setState({
 		temp: newMainTemp,
@@ -225,6 +246,20 @@ getTime() { // EDIT THIS
 
 //=======================================
 //=======================================
+toggle_func(){
+	if (this.state.toggle_page==true)
+	{
+		this.setState({toggle_page:false})
+	}
+	else
+	{
+		this.setState({toggle_page:true})
+	}
+}
+
+
+//==================================
+//==================================
 
 
 //==================================
@@ -236,8 +271,7 @@ getTime() { // EDIT THIS
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
 		var time = this.getTime();
-		let main = (<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
-						<div class={ style.header }>
+		let main = (<div class={ style.header }>
 							<div class={ style.city }>
 								{ this.state.locate}, {this.state.country }
 							</div>
@@ -248,14 +282,27 @@ getTime() { // EDIT THIS
 									<h1 style = {{color: this.state.farColour}} onClick = {this.state.toggle ? this.celToFarConvert : null}> F </h1>
 								</div>
 							</div>
-							<div class={ style.conditions }>
-								{ this.state.cond }
+							<div>
+								<table align="center">
+									<tr>
+										<td class={ style.currentConditions }>{this.state.cond}</td>
+									</tr>
+									<tr>
+										<td class={ style.lastUpdated }>Last updated {this.state.time}</td>
+									</tr>
+									<tr>
+										<td class={ style.feelsLike }>Feels like --°</td>
+									</tr>
+									<tr>
+										<td class={ style.dailyLook }>Daily Look</td>
+									</tr>
+								</table>
 							</div>
 							<div class = {style.forecasts} >
 								<table>
 									<tr>
 										{this.state.days.map((item, key) => {
-											return <td key={key}>{item}</td>
+											return <td class ={style.dates} key={key}>{item}</td>
 										})}
 									</tr>
 									<tr>
@@ -265,25 +312,42 @@ getTime() { // EDIT THIS
 									</tr>
 									<tr>
 										{this.state.forecasts.map((item, key) => {
-											return <td class = {forecastStyles} key = {key}> {item} </td>
+											return <td class = {style.previewForecastsHigh} key = {key}> {item} </td>
 										})}
 									</tr>
 
 									<tr>
 										{this.state.conds.map((item, key) => {
-										return <td style = "width: 80px;" key = {key}> {item} </td>
+										return <td style = "width: 80px; class={ style.predictedConditions }" key = {key}> {item} </td>
 										})}
 									</tr>
 								</table>
 							</div>
-							<div style = "overflow: auto; height: 350px;">
+							<div style = "overflow: auto; height: 300px;">
 								{this.state.tfl}
 							</div>
-						</div>
-					</div>);
-					let otherPage = (<div><p>{JSON.stringify(this.state.d)}</p></div>)
+							<div class={style.footer}>
+							<button onclick={this.toggle_func}>Settings</button>
+							</div>
+						</div>);
+		let otherPage = (
+						<div class={ style.header }>
+							<div class={ style.city }>
+								Settings
+							</div>
+							<form onSumit="">
+							{this.state.tfl_name}
+							<submit>
+							</submit>
+							</form>
+							<div class={style.footer}>
+							<button onclick={this.toggle_func}>go back</button>
+							</div>
+						</div>);
 		return (
-			<span>{true ? main : otherPage}</span>
+			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+			<span>{this.state.toggle_page==true ? main : otherPage}</span>
+			</div>
 		);
 	}
 
@@ -299,8 +363,7 @@ getTime() { // EDIT THIS
 		var condCode = parsed_json['weather']['0']['id'];
 		// set states for fields so they could be rendered later on
 		this.setState({
-			locate: location,
-			country: countryName,
+
 			temp: temp_c,
 			cond : conditions,
 			code : condCode,
@@ -314,108 +377,58 @@ getTime() { // EDIT THIS
 			conds: [],
 			condImages: []
 		})
-		var day1temp = Math.round(parsed_json['list'] ['0'] ['main'] ['temp']);
-		var day1conditions = parsed_json['list'] ['0'] ['weather']['0']['description'];
-		var day1condCode = parsed_json['list'] ['0'] ['weather']['0']['id'];
-		var day1=(parsed_json['list']['5']['dt_txt'])
-		var day1_n=new Date(day1)
-		var b = day1.split("-")
-	  var j = b[2].split(" ")
-		var day1_t= this.getDayofWeek(day1_n.getDay())+ " " + j[0]
+		var forecast = new Array(5);
+		for(var i =0 ; i<5;i++)
+		{
+			forecast[i]= Math.round(parsed_json['list'] [i*8] ['main'] ['temp']);
+		}
+		var conditions = new Array(5);
+		for(var i =0 ; i<5;i++)
+		{
+			conditions[i]= parsed_json['list'] [i*8] ['weather']['0']['description'];
+		}
 
+		var condcode = new Array(5)
+		for(var i =0 ; i<5;i++)
+		{
+			condcode[i]= parsed_json['list'] [i*8] ['weather']['0']['id'];
+		}
 
-		var day2temp = Math.round(parsed_json['list'] ['8'] ['main'] ['temp']);
-		var day2conditions = parsed_json['list'] ['8'] ['weather']['0']['description'];
-		var day2condCode = parsed_json['list'] ['8'] ['weather']['0']['id'];
-		var day2=(parsed_json['list']['13']['dt_txt'])
-		var day2_n=new Date(day2)
-		var b = day2.split("-")
-	  var j = b[2].split(" ")
-		var day2_t= this.getDayofWeek(day2_n.getDay())+ " " + j[0]
-
-
-		var day3temp = Math.round(parsed_json['list'] ['16'] ['main'] ['temp']);
-		var day3conditions = parsed_json['list'] ['16'] ['weather']['0']['description'];
-		var day3condCode = parsed_json['list'] ['16'] ['weather']['0']['id'];
-		var day3 = (parsed_json['list']['21']['dt_txt'])
-		var day3_n=new Date(day3)
-		var b = day3.split("-")
-	  var j = b[2].split(" ")
-		var day3_t= this.getDayofWeek(day3_n.getDay())+ " " + j[0]
-
-		var day4temp = Math.round(parsed_json['list'] ['24'] ['main'] ['temp']);
-		var day4conditions = parsed_json['list'] ['24'] ['weather']['0']['description'];
-		var day4condCode = parsed_json['list'] ['24'] ['weather']['0']['id'];
-		var day4=(parsed_json['list']['29']['dt_txt'])
-		var day4_n=new Date(day4)
-		var b = day4.split("-")
-		var j = b[2].split(" ")
-		var day4_t= this.getDayofWeek(day4_n.getDay())+ " " + j[0]
-
-		var day5temp = Math.round(parsed_json['list'] ['32'] ['main'] ['temp']);
-		var day5conditions = parsed_json['list'] ['32'] ['weather']['0']['description'];
-		var day5condCode = parsed_json['list'] ['32'] ['weather']['0']['id'];
-		var day5 = (parsed_json['list']['38']['dt_txt'])
-		var day5_n=new Date(day5)
-		var b = day5.split("-")
-		var j = b[2].split(" ")
-		var day5_t= this.getDayofWeek(day5_n.getDay())+ " " + j[0]
-
-		////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////
-
-		// ARRAY FOR DAYS AND DATES
-		let day = [];
-		day.push(day1_t);
-		day.push(day2_t);
-		day.push(day3_t);
-		day.push(day4_t);
-		day.push(day5_t);
-
-		//ARRAY FOR DAILY CONDITION IMAGES
-		let condCodes = [];
-		condCodes.push(day1condCode);
-		condCodes.push(day2condCode);
-		condCodes.push(day3condCode);
-		condCodes.push(day4condCode);
-		condCodes.push(day5condCode);
-
-
-		// ARRAY FOR FORECASTED TEMPS
-		let dailyForecasts = [];
-		dailyForecasts.push(day1temp);
-		dailyForecasts.push(day2temp);
-		dailyForecasts.push(day3temp);
-		dailyForecasts.push(day4temp);
-		dailyForecasts.push(day5temp);
-
-		// ARRAY FOR DAILY conditions
-		let dailyConditions = [];
-		dailyConditions.push(day1conditions);
-		dailyConditions.push(day2conditions);
-		dailyConditions.push(day3conditions);
-		dailyConditions.push(day4conditions);
-		dailyConditions.push(day5conditions);
-
+		var day = new Array(5)
+		for(var i =0 ; i<5;i++)
+		{
+			let day1=(parsed_json['list'][(i*8)+5]['dt_txt'])
+			let day1_n=new Date(day1)
+			let b = day1.split("-")
+			let j = b[2].split(" ")
+			day[i]= this.getDayofWeek(day1_n.getDay())+ " " + j[0]
+		}
 
 		this.setState({
 			days: day,
-			forecasts: dailyForecasts,
-			conds: dailyConditions,
-			condImages: condCodes
+			forecasts: forecast,
+			conds: conditions,
+			condImages: condcode
 		});
 	}
 
 
 	parseTFLResponse = (parsed_json) =>
 	{
+		this.setState({
+			tfl_name:[]
+		})
 		let tflList;
+
+		let tflName=parsed_json.map((x)=>{
+			let name =x['name']
+			return {name}
+		})
 
 			let tflLines = parsed_json.map((x) => {
 				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
-				let name = x['name'];
 				let res = x['lineStatuses'] ['0'] ['reason'];
-				return {name,desc, res}
+				return {desc, res}
 			})
 
 
@@ -435,9 +448,32 @@ getTime() { // EDIT THIS
 						<div class = {style.TEXT}>{item.res}</div>
 				</div>)
 			}
+			tflName =tflName.map(item =>
+			 	<div class = {style.tflContainer}>
+					{item.name}<input type = "checkbox" value={item} ></input>
+			 	</div>)
+			// need to add
+
 
 			this.setState({
-				tfl: tflList
+				tfl: tflList,
+				tfl_name: tflName
 			});
+	}
+
+	parseLocationResponse = (parsed_json) =>{
+		let location= parsed_json['results'][0]['components']['suburb']
+		let city = parsed_json['results'][0]['components']['city']
+		var time = parsed_json['timestamp']['created_http']
+		var time_t= time.split(" ")
+		time_t= time_t[4]
+		time_t=time_t.split(":")
+		time_t=time_t[0]+":"+time_t[1]
+
+		this.setState({
+			locate: location,
+			country: city,
+			time:time_t
+		})
 	}
 }
