@@ -32,6 +32,7 @@ export default class Iphone extends Component {
 		this.celToFarConvert = this.celToFarConvert.bind(this);
 		this.farToCelConvert = this.farToCelConvert.bind(this);
 		this.toggle_func = this.toggle_func.bind(this);
+		this.gettflLogo = this.gettflLogo.bind(this);
 	}
 
 
@@ -569,19 +570,19 @@ toggle_func(){
 
 gettflLogo(id) {
 	switch(id) {
-		case 0: return <img src = {"../../assets/misc/Train_icons/tfl0.png" style = "width: 30px; height: 20px;"} />;
-		case 1: return <img src = "../../assets/misc/Train_icons/tfl1.png" style = "width: 30px; height: 20px;" />;
-		case 2: return <img src = "../../assets/misc/Train_icons/tfl2.png" style = "width: 30px; height: 20px;" />;
-		case 3: return <img src = "../../assets/misc/Train_icons/tfl3.png" style = "width: 30px; height: 20px;" />;
-		case 4: return <img src = "../../assets/misc/Train_icons/tfl4.png" style = "width: 30px; height: 20px;" />;
-		case 5: return <img src = "../../assets/misc/Train_icons/tfl5.png" style = "width: 30px; height: 20px;" />;
-		case 6: return <img src = "../../assets/misc/Train_icons/tfl6.png" style = "width: 30px; height: 20px;" />;
-		case 7: return <img src = "../../assets/misc/Train_icons/tfl7.png" style = "width: 30px; height: 20px;" />;
-		case 8: return <img src = "../../assets/misc/Train_icons/tfl8.png" style = "width: 30px; height: 20px;" />;
-		case 9: return <img src = "../../assets/misc/Train_icons/tfl9.png" style = "width: 30px; height: 20px;" />;
-		case 10: return <img src = "../../assets/misc/Train_icons/tfl10.png" style = "width: 30px; height: 20px;" />;
-		case 11: return <img src = "../../assets/misc/Train_icons/tfl11.png" style = "width: 30px; height: 20px;" />;
-		case 12: return <img src = "../../assets/misc/Train_icons/tfl12.png" style = "width: 30px; height: 20px;" />;
+		case 0: return "../../assets/misc/Train_icons/tfl_0.png";
+		case 1: return "../../assets/misc/Train_icons/tfl_1.png";
+		case 2: return "../../assets/misc/Train_icons/tfl_2.png";
+		case 3: return "../../assets/misc/Train_icons/tfl_3.png";
+		case 4: return "../../assets/misc/Train_icons/tfl_4.png";
+		case 5: return "../../assets/misc/Train_icons/tfl_5.png";
+		case 6: return "../../assets/misc/Train_icons/tfl_6.png";
+		case 7: return "../../assets/misc/Train_icons/tfl_7.png";
+		case 8: return "../../assets/misc/Train_icons/tfl_8.png";
+		case 9: return "../../assets/misc/Train_icons/tfl_9.png";
+		case 10: return "../../assets/misc/Train_icons/tfl_10.png";
+		case 11: return "../../assets/misc/Train_icons/tfl_11.png";
+		case 12: return "../../assets/misc/Train_icons/tfl_12.png";
 		default: return null;
 	}
 }
@@ -617,7 +618,8 @@ parseTFLResponse = (parsed_json) =>
 
 			<div class = {style.checkBoxContainer} >
 				{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
-				{this.gettflLogo(item.tfl_id)}
+				<img src = {this.gettflLogo(item.tfl_id)} style = "width: 30px; height: 20px;" />
+
 			</div>)
 
 
