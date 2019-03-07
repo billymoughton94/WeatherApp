@@ -20,9 +20,11 @@ export default class Iphone extends Component {
 		this.state.days = [];
 		this.state.conds = [];
 		this.state.condImages = [];
-		// button display state
+		// calling the apis
 		this.fetchAPIs();
-		this.setState({display:true, toggle: true, toggle_page:true, isChecked:false,tflName:[]});
+		this.setState({display:true, toggle: true, toggle_page:true});
+
+
 		this.celToFarConvert = this.celToFarConvert.bind(this);
 		this.farToCelConvert = this.farToCelConvert.bind(this);
 		this.toggle_func = this.toggle_func.bind(this);
@@ -31,10 +33,11 @@ export default class Iphone extends Component {
 	//=======================================
 	//=============== API FETCH =============
 	fetchAPIs (){
+		//these api call calls up
+		this.fetchLocation.call();
 		this.fetchWeatherData.call();
 		this.fetchForecastData.call();
 		this.fetchTflData.call();
-		this.fetchLocation.call();
 		// this.fetchBus.call();
 	}
 //=======================================================
@@ -365,11 +368,10 @@ filter_tfl_lines() {
 							<h2> TFL Line Filter </h2>
 							<h4> Select the lines interesting to you </h4>
 							<form>
-							{this.state.tfl_filter}
+							{this.state.tfl_Options}
 							</form>
 							<div class={style.footer}>
 							<button onclick={this.toggle_func}>Back</button>
-							<button onClick = {this.defaultLocation}> Set Location </button>
 							</div>
 						</div>);
 		return (
@@ -440,81 +442,108 @@ filter_tfl_lines() {
 	//==================================
 	//==================================
 		onToggle(item){
-			var index = item['tfl_id']
-			console.log(item)
-			console.log(item['checked'])
-		 if (item['checked']==true){
-			 	this.setState(state =>{
-					const tflname = state.tfl_name.map((item)=>{
-						if (item['tfl_id'] == index)
-						{
-							item['checked']=false
-						}
-					})
-				})
-		 }
-		 else{
-			 this.setState(state =>{
-				 const tflname = state.tfl_name.map((item)=>{
-					 if (item['tfl_id'] == index)
+		 var index = item['tfl_id']
+		 this.setState(state =>{
+			 const tflname = state.tfl_lines.map((item)=>{
+				 if (item['tfl_id'] == index)
+				 	{
+					 if (item['checked']==true)
 					 {
-						 item['checked']=true
+					 	item['checked']=false
 					 }
-				 })
+
+					 else
+					 {
+							 item['checked']=true
+					 }
+			 		}
 			 })
-	 }
-		 console.log(this.state.tfl_name)
+		 })
+	this.check_options()
+	console.log(this.state.tfl_lines)
 	}
+	//==============================
+	//==============================
+	check_options(){
+		let tflList_of_effected;
+		let tflChoice = this.state.tfl_lines.filter((x) => {
+			return x.checked == true //
+		})
+		console.log(tflChoice)
+		let tflChoiceEffected = tflChoice.map((x)=>{
+			return x.desc!="Good Service"
+		})
+		console.log(tflChoiceEffected)
+
+		console.log(tflChoiceEffected.length)
+		let tflLinesAffected = this.state.tfl_lines.filter((x) => {
+			return x.desc != "Good Service" //"Good Service"
+		})
+		if (tflChoice.length ==0){
+			if (tflLinesAffected.length == 0 ) {//when all lines are good service
+				tflList_of_effected =  <p style = "background-color: green; margin: 0;">All lines are in good service</p>;
+			}
+			else{
+			tflList_of_effected = tflLinesAffected.map(item =>
+				<div class = {style.tflContainer}>
+				<img src = '../../assets/icons/Bubble1.png' />
+				<div class = {style.TEXT}>{item.res}</div>
+				</div>)
+			}
+		}
+
+		else {
+			if (tflChoiceEffected.length==0){
+				tflList_of_effected =  <p style = "background-color: green; margin: 0;">All Your Choosen lines are in good service</p>;
+			}
+			else{
+				tflList_of_effected = tflChoice.map(item =>
+					<div class = {style.tflContainer}>
+					<img src = '../../assets/icons/Bubble1.png' />
+					<div class = {style.TEXT}>{item.res}</div>
+					</div>)
+		}
+	}
+		this.setState({
+			tfl:tflList_of_effected
+		})
+
+
+		}
+
 	//==============================
 	//=============================
 	parseTFLResponse = (parsed_json) =>
 	{
-		let tflList;
+		let tflList_of_effected;
+
 
 		let id =0
-		let tflName=parsed_json.map((x)=>{
-			let name =x['name']
-			let checked=false
-			let tfl_id = id
-			id=id+1
-			return {name,checked,tfl_id}
-		})
-		console.log(tflName)
-		this.setState({
-			tfl_name:tflName
-		})
 			let tflLines = parsed_json.map((x) => {
 				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
 				let res = x['lineStatuses']['0']['reason'];
-				return {desc,res}
+				let name =x['name']
+				let checked=false
+				let tfl_id = id
+				id=id+1
+				return {name,checked,tfl_id,desc,res}
 			})
-
+			console.log(tflLines)
 			// Return certain lines based on their severity status
-			let tflLinesAffected = tflLines.filter((x) => {
-				return x.desc != "Good Service" //"Good Service"
-			})
+			this.setState({
+				tfl_lines:tflLines
+			});
+			this.check_options()
 
-			if (tflLinesAffected.length == 0) {
-				tflList =  <p style = "background-color: green; margin: 0;">All lines are in good service</p>;
-			}
-			else {
-			 tflList = tflLinesAffected.map(item =>
-				<div class = {style.tflContainer}>
-					<img src = '../../assets/icons/Bubble1.png' />
-						<div class = {style.TEXT}>{item.res}</div>
-				</div>)
-			}
-
-			let tfl_f =tflName.map(item =>
+			let tfl_f =tflLines.map(item =>
 			 	<div class = {style.tflContainer} >
 					{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
 			 	</div>)
 
 
 			this.setState({
-				tfl: tflList,
-				tfl_filter:tfl_f
-			});
+				tfl_Options:tfl_f
+			})
 	}
 
 	parseLocationResponse = (parsed_json) =>{
