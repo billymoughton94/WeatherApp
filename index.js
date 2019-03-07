@@ -448,14 +448,14 @@ toggle_func(){
 								Settings
 							</div>
 								<table>
-									<tr>
+									{/*<tr>
 										<td class={ style.tflline }>TFL Line Filter</td>
-									</tr>
+									</tr> */}
 									<tr>
 										<td class={ style.interestingline }>Select the lines interesting to you</td>
 									</tr>
 								</table>
-							<form>
+							<form style = "margin: 5px;">
 							{this.state.tfl_Options}
 							</form>
 							<div class={style.footer}>
@@ -480,11 +480,11 @@ toggle_func(){
 						return (
 							<div>
 							{this.state.toggle_page ?
-								(<div class={ time >= 19 || time < 6 ? style.containerLight : style.containerLight }>
+								(<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
 								<span> {main} </span>
 								</div>)
 								:
-								(<div class={ time >= 19 || time < 6 ? style.settingsLight : style.settingsLight }>
+								(<div class= {style.settings}>
 								<span> {otherPage} </span>
 								</div>)
 							};
@@ -599,7 +599,7 @@ parseTFLResponse = (parsed_json) =>
 		this.check_options()
 
 		let tfl_f =tflLines.map(item =>
-			<div class = {style.tflContainer} >
+			<div class = {style.checkBoxContainer} >
 				{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
 			</div>)
 
