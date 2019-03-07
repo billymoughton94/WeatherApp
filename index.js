@@ -123,9 +123,7 @@ fetchLocation= ()=>{
 			var crd=pos.coords;
 			var lat= crd.latitude;
 			var long = crd.longitude
-			console.log(lat)
-			console.log(long)
-		var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+long+"&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
+			var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+long+"&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -145,7 +143,7 @@ fetchLocation= ()=>{
 //============================================================
 //============================================================
 //============================================================
-//=============== TFL DATA FETCH AND DISPLAY ============= 		DESCRIPTION: API WILL FETCH TFL TRAIN LINE DETAILS AND THEIR CONDITIONS
+//=============== TFL DATA FETCH AND DISPLAY =================   DESCRIPTION: API WILL FETCH TFL TRAIN LINE DETAILS AND THEIR CONDITIONS
 
 	fetchTflData = () => {
 		var url = "https://api.tfl.gov.uk/Line/Mode/tube%2Cdlr%2Coverground/Status?detail=true&app_id=2cf7f9a8&app_key=%20%20%20%2001aef9b37ed476700c32051e34bc4b83";
@@ -371,7 +369,7 @@ toggle_func(){
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
+		const forecastStyles = this.state.temp ? `${style.previewForecastsHigh} ${style.filled}` : style.forecasts;
 		var time = this.getTime();
 		let main = (<div class={ style.header }>
 							<div class={ style.city }>
@@ -417,7 +415,7 @@ toggle_func(){
 
 									<tr>
 										{this.state.conds.map((item, key) => {
-										return <td style = "width: 80px; class={ style.predictedConditions }" key = {key}> {item} </td>
+										return <td style = "width: 80px;" class={ style.predictedConditions } key = {key}> {item} </td>
 										})}
 									</tr>
 								</table>
@@ -582,7 +580,6 @@ parseTFLResponse = (parsed_json) =>
 			id=id+1
 			return {name,checked,tfl_id,desc,res}
 		})
-		console.log(tflLines)
 		// Return certain lines based on their severity status
 		this.setState({
 			tfl_lines:tflLines
@@ -646,13 +643,10 @@ parseTFLResponse = (parsed_json) =>
 		let tflChoice = this.state.tfl_lines.filter((x) => {
 			return x.checked == true //
 		})
-		console.log(tflChoice)
 		let tflChoiceEffected = tflChoice.filter((x)=>{
 			return x.desc!="Good Service"
 		})
-		console.log(tflChoiceEffected)
 
-		console.log(tflChoiceEffected.length)
 		let tflLinesAffected = this.state.tfl_lines.filter((x) => {
 			return x.desc != "Good Service" //"Good Service"
 		})
