@@ -12,7 +12,8 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
+
+		// setting the states for various items in the Iphone Component
 		this.state.temp = "";
 		this.state.celColour = 'white';
 		this.state.farColour = 'grey';
@@ -20,18 +21,25 @@ export default class Iphone extends Component {
 		this.state.days = [];
 		this.state.conds = [];
 		this.state.condImages = [];
+
 		// calling the apis
 		this.fetchAPIs();
+
 		this.setState({display:true, toggle: true, toggle_page:true});
 
 
+		// binding functions to the component instance
 		this.celToFarConvert = this.celToFarConvert.bind(this);
 		this.farToCelConvert = this.farToCelConvert.bind(this);
 		this.toggle_func = this.toggle_func.bind(this);
 	}
 
+
+
 	//=======================================
-	//=============== API FETCH =============
+	//=======================================
+	//=======================================
+	//=============== API FETCH =============		DESCRIPTION: FUNCTION WILL MAKE A CALL TO THE API'S USED
 	fetchAPIs (){
 		//these api call calls up
 		this.fetchLocation.call();
@@ -40,8 +48,17 @@ export default class Iphone extends Component {
 		this.fetchTflData.call();
 		// this.fetchBus.call();
 	}
+	//=======================================
+	//=======================================
+	//=======================================
+	//=======================================
+
+
+
 //=======================================================
 //=======================================================
+//=======================================================
+//================LOCATION API=========================== 		DESCRIPTION: LOCATION API WILL RETURN COORDINATES AND DETAILS OF USER'S LOCATION
 
 fetchLocation= ()=>{
 	let a =navigator.geolocation.getCurrentPosition((pos)=>
@@ -56,15 +73,20 @@ fetchLocation= ()=>{
 			success : this.parseLocationResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-
 	})
-
 }
+
+//=======================================================
+//=======================================================
+//=======================================================
+//=======================================================
 
 
 
 //============================================================
-//=============== WEATHER DATA FETCH AND DISPLAY =============
+//============================================================
+//============================================================
+//=============== WEATHER DATA FETCH AND DISPLAY ============= 		DESCRIPTION: API WILL FETCH DETAILS ABOUT TODAY'S WEATHER
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
@@ -85,9 +107,16 @@ fetchLocation= ()=>{
 	}
 //============================================================
 //============================================================
+//============================================================
+//============================================================
+
+
 
 //============================================================
-//=============== FORCAST DATA FETCH AND DISPLAY =============
+//============================================================
+//============================================================
+//=============== FORCAST DATA FETCH AND DISPLAY ============= 		DESCRIPTION: API WILL FETCH DETAILS ABOUT WHEATHER IN THE NEXT 5 DAYS
+
 	fetchForecastData = () => {
 		let a =navigator.geolocation.getCurrentPosition((pos)=>
 		{
@@ -108,10 +137,16 @@ fetchLocation= ()=>{
 	}
 //============================================================
 //============================================================
+//============================================================
+//============================================================
+
 
 
 //============================================================
-//=============== TFL DATA FETCH AND DISPLAY =============
+//============================================================
+//============================================================
+//=============== TFL DATA FETCH AND DISPLAY ============= 		DESCRIPTION: API WILL FETCH TFL TRAIN LINE DETAILS AND THEIR CONDITIONS
+
 	fetchTflData = () => {
 		var url = "https://api.tfl.gov.uk/Line/Mode/tube%2Cdlr%2Coverground/Status?detail=true&app_id=2cf7f9a8&app_key=%20%20%20%2001aef9b37ed476700c32051e34bc4b83";
 		$.ajax({
@@ -122,12 +157,17 @@ fetchLocation= ()=>{
 		})
 
 	}
-
+//============================================================
+//============================================================
 //============================================================
 //============================================================
 
-//==================================================
-//=============== WEATHER ICON FETCH =============
+
+
+//================================================
+//================================================
+//================================================
+//=============== WEATHER ICON FETCH ============= 		DESCRIPTION: MAIN WEATHER ICON WILL BE SET ACCORDING TO THE WEATHER CONDITIONS
 
 	mainWeatherSymbol(conditionsCode) {
 		// "../../assets/icons/Large_sunny.png"
@@ -153,14 +193,19 @@ fetchLocation= ()=>{
 			default: return;
 		}
 	}
-//==================================================
-//==================================================
+//================================================
+//================================================
+//================================================
+//================================================
+
+
 
 //==================================================
-//=============== FORECASTS ICON FETCH =============
+//==================================================
+//==================================================
+//=============== FORECASTS ICON FETCH ============= 		DESCRIPTION: FORECASTED WEATHER ICONS WILL BE SET ACCORDING TO FORECASTED CONDITIONS
 
 	forecastWeatherSymbol(conditionsCode) {
-		// "../../assets/icons/Large_sunny.png"
 
 		switch (conditionsCode) {
 			case 300: case 301: case 302: case 310: case 311:
@@ -186,9 +231,14 @@ fetchLocation= ()=>{
 	}
 //==================================================
 //==================================================
+//==================================================
+//==================================================
+
 
 //==========================================
-//=============== GET WEEKEDAY =============
+//==========================================
+//==========================================
+//=============== GET WEEKEDAY ============= 		DESCRIPTION: DAY OF THE WEEK WILL BE RETURNED FOR EACH FORECASTED DAY LISTED
 
 getDayofWeek(day)
 {
@@ -206,10 +256,16 @@ getDayofWeek(day)
 }
 //==========================================
 //==========================================
+//==========================================
+//==========================================
 
 
-//==============TEMPERATURE CONVERT========================
+
 //=============================================
+//=============================================
+//=============================================
+//=======CELCIUS TO FARENHEIT CONVERT========== 		DESCRIPTION: UNIT OF MEASUREMENT FOR WEATHER IS CHANGED FROM CELCIUS TO FARENHEIT
+
 celToFarConvert() {
 	var newMainTemp = (this.state.temp * (9/5)) + 32;
 	newMainTemp = Math.round(newMainTemp);
@@ -231,6 +287,16 @@ celToFarConvert() {
 }
 //=============================================
 //=============================================
+//=============================================
+//=============================================
+
+
+
+//=============================================
+//=============================================
+//=============================================
+//=======FARENHEIT TO CELCIUS CONVERT==========  		DESCRIPTION: UNIT OF MEASUREMENT FOR WEATHER IS CHANGED FROM FARENHEIT TO CELCIUS
+
 
 farToCelConvert() {
 	var newMainTemp = (this.state.temp - 32) * (5/9) ;
@@ -251,19 +317,34 @@ farToCelConvert() {
 		celColour: "white"
 	});
 }
+//=============================================
+//=============================================
+//=============================================
+//=============================================
 
 
 
-
-//=============GET TIME=================
 //=======================================
+//=======================================
+//=======================================
+//=============GET TIME==================   		DESCRIPTION: CURRENT TIME IS RETRIEVED FROM A DATE OBJECT (TO BE USED TO DETERMINE DAY/NIGHT MODE)
+
 getTime() { // EDIT THIS
 	var date = new Date();
 	return date.getHours();
 }
+//=======================================
+//=======================================
+//=======================================
+//=======================================
+
+
 
 //=======================================
 //=======================================
+//=======================================
+//=============SWITCH PAGE===============   		DESCRIPTION: TOGGLE THAT WILL SWITCH PAGES ON CLICK OF A BUTTON
+
 toggle_func(){
 	if (this.state.toggle_page==true)
 	{
@@ -274,29 +355,17 @@ toggle_func(){
 		this.setState({toggle_page:true})
 	}
 }
-
-//==================================
-//==================================
-defaultLocation() {
-	var location = prompt("Please enter your location");
-
-}
-//==================================
-//==================================
-
-filter_tfl_lines() {
-	{/*var updatedTFL = this.state.tfl_checkList.map((x) => {
-		if(x.checked) {
-			return x;
-		}
-	}) */}
+//=======================================
+//=======================================
+//=======================================
+//=======================================
 
 
-}
 
-
-//==================================
-//=============== MAIN =============
+//=============================================================================
+//=============================================================================
+//=============================================================================
+//==============================MAIN PAGE =====================================   		DESCRIPTION: ALL ELEMENTS OF THE MAIN PAGE, INCLUDING WEATHER AND TRANSPORT INFO
 
 	// the main render method for the iphone component
 	render() {
@@ -360,6 +429,19 @@ filter_tfl_lines() {
 							<button onclick={this.toggle_func}>Settings</button>
 							</div>
 						</div>);
+
+//=============================================================================
+//=============================================================================
+//=============================================================================
+//=============================================================================
+
+
+
+//=============================================================================
+//=============================================================================
+//=============================================================================
+//==============================SETTINGS PAGE =================================   		DESCRIPTION: SETTINGS PAGE THAT WILL LET USER FILTER TRANSPORT OPTIONS TO SUIT THEM
+
 		let otherPage = (
 						<div class={ style.header }>
 							<div class={ style.city }>
@@ -374,16 +456,40 @@ filter_tfl_lines() {
 							<button onclick={this.toggle_func}>Back</button>
 							</div>
 						</div>);
-		return (
-			<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
-			<span>{this.state.toggle_page==true ? main : otherPage}</span>
-			</div>
-		);
+
+//=============================================================================
+//=============================================================================
+//=============================================================================
+//=============================================================================
+
+
+//==================================
+//==================================
+
+// RETURN APPROPRIATE PAGE / TOGGLE DAY-NIGHT MODE
+
+						return (
+							<div>
+							{this.state.toggle_page ?
+								(<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+								<span> {main} </span>
+								</div>)
+								:
+								(<div class={ time >= 19 || time < 6 ? style.settingsDark : style.settingsLight }>
+								<span> {otherPage} </span>
+								</div>)
+							};
+							</div>
+					)
 	}
-
 //==================================
 //==================================
 
+
+//=======================================
+//=======================================
+//=======================================
+//=======MAIN WEATHER API RESPONSE=======   		DESCRIPTION: VARIABLES RETRIEVED FROM MAIN WEATHER API WILL STORE VARIABLES IN COMPONENT STATES
 
 	parseWeatherResponse = (parsed_json) => {
 		var location = parsed_json['name'];
@@ -399,6 +505,17 @@ filter_tfl_lines() {
 			code : condCode,
 		});
 	}
+//=======================================
+//=======================================
+//=======================================
+//=======================================
+
+
+
+//=======================================
+//=======================================
+//=======================================
+//==5-DAY FORECAST WEATHER API RESPONSE==    		DESCRIPTION: VARIABLES RETRIEVED FROM FORECASTED WEATHER API WILL STORE VARIABLES IN COMPONENT STATES
 
 	parseForecastResponse = (parsed_json) => {
 		this.setState({
@@ -438,9 +555,60 @@ filter_tfl_lines() {
 			condImages: condcode
 		});
 	}
+//=======================================
+//=======================================
+//=======================================
+//=======================================
 
-	//==================================
-	//==================================
+
+
+//=======================================
+//=======================================
+//=======================================
+//=======TFL API RESPONSE================     		DESCRIPTION: REPSONSE FROM TFL API THAT WILL BE USED TO CREATE SETTING CHECKBOX AMONG OTHER RELATED VARIABLES
+
+parseTFLResponse = (parsed_json) =>
+{
+	let tflList_of_effected;
+
+
+	let id =0
+		let tflLines = parsed_json.map((x) => {
+			let desc = x['lineStatuses'][0]['statusSeverityDescription'];
+			let res = x['lineStatuses']['0']['reason'];
+			let name =x['name']
+			let checked=false
+			let tfl_id = id
+			id=id+1
+			return {name,checked,tfl_id,desc,res}
+		})
+		console.log(tflLines)
+		// Return certain lines based on their severity status
+		this.setState({
+			tfl_lines:tflLines
+		});
+		this.check_options()
+
+		let tfl_f =tflLines.map(item =>
+			<div class = {style.tflContainer} >
+				{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
+			</div>)
+
+
+		this.setState({
+			tfl_Options:tfl_f
+		})
+}
+//=======================================
+//=======================================
+//=======================================
+//=======================================
+
+
+
+	//=================================================
+	//=========TOGGLE TFL CHECKLIST STATUS=============     		DESCRIPTION: A TOGGLE FOR DETERMINING IF USER HAS FILTER A TFL OPTION OR NOT
+
 		onToggle(item){
 		 var index = item['tfl_id']
 		 this.setState(state =>{
@@ -462,8 +630,17 @@ filter_tfl_lines() {
 	this.check_options()
 	console.log(this.state.tfl_lines)
 	}
-	//==============================
-	//==============================
+
+	//=================================================
+	//=================================================
+
+
+
+	//=======================================
+	//=======================================
+	//=======================================
+	//=======DISPLAY & FILTER TFL LINES======     		DESCRIPTION: FUNCTION THAT WILL DISPLAY THE OUTPUT OF AFFECTED TFL LINES & THOSE FILTER BY USER
+
 	check_options(){
 		let tflList_of_effected;
 		let tflChoice = this.state.tfl_lines.filter((x) => {
@@ -493,7 +670,7 @@ filter_tfl_lines() {
 		}
 		else {
 			if (tflChoiceEffected.length==0){
-				tflList_of_effected =  <p style = "background-color: green; margin: 0;">All Your Choosen lines are in good service</p>;
+				tflList_of_effected =  <p style = "background-color: green; margin: 0;">All chosen lines are in good service</p>;
 			}
 			else{
 				tflList_of_effected = tflChoiceEffected.map(item =>
@@ -510,40 +687,20 @@ filter_tfl_lines() {
 
 		}
 
-	//==============================
-	//=============================
-	parseTFLResponse = (parsed_json) =>
-	{
-		let tflList_of_effected;
+	//=======================================
+	//=======================================
+	//=======================================
+	//=======================================
 
 
-		let id =0
-			let tflLines = parsed_json.map((x) => {
-				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
-				let res = x['lineStatuses']['0']['reason'];
-				let name =x['name']
-				let checked=false
-				let tfl_id = id
-				id=id+1
-				return {name,checked,tfl_id,desc,res}
-			})
-			console.log(tflLines)
-			// Return certain lines based on their severity status
-			this.setState({
-				tfl_lines:tflLines
-			});
-			this.check_options()
-
-			let tfl_f =tflLines.map(item =>
-			 	<div class = {style.tflContainer} >
-					{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
-			 	</div>)
 
 
-			this.setState({
-				tfl_Options:tfl_f
-			})
-	}
+
+
+	//=======================================
+	//=======================================
+	//=======================================
+	//=======LOCATION API RESPONSE===========     		DESCRIPTION: RESULTS OF LOCATION API TO BE USED TO DISPLAY USER'S LOCATION ON SCREEN AND FETCH WEATHER DATA ABOUT THEIR AREA
 
 	parseLocationResponse = (parsed_json) =>{
 		let location= parsed_json['results'][0]['components']['suburb']
@@ -560,7 +717,18 @@ filter_tfl_lines() {
 			time:time_t
 		})
 	}
-}
+
+	//=======================================
+	//=======================================
+	//=======================================
+	//=======================================
+
+
+} //////////////// END OF IPHONE COMPONENT ////////////////
+
+
+
+
 // parseBusRepsonse=(parsed_json)=>
 // {
 	// 	this.setState({
