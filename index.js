@@ -38,8 +38,43 @@ export default class Iphone extends Component {
 		this.fetchWeatherData.call();
 		this.fetchForecastData.call();
 		this.fetchTflData.call();
-		// this.fetchBus.call();
+		this.fetchBus.call();
 	}
+//========================================================================
+//========================================================================
+fetchBus = () =>
+{
+		let a =navigator.geolocation.getCurrentPosition((pos)=>
+		{
+				var crd=pos.coords;
+				var lat= crd.latitude;
+				var long = crd.longitude
+				console.log(lat)
+				console.log(long)
+			var url = "http://transportapi.com/v3/uk/places.json?lat="+lat+"&lon="+long+"&type=bus_stop&app_id=781764bb&app_key=40a177294f041ee56d9ba84ef1b5849a";
+			console.log(url)
+			$.ajax({
+					url: url,
+					dataType: "json",
+					success : this.parseBusRepsonse,
+					error : function(req, err){ console.log('API call failed Bus ' + err); }
+					})
+				})
+	}
+	//========================================================================
+	//========================================================================
+	fetchBus_live = (code) =>
+	{
+				var url = "http://transportapi.com/v3/uk/places.json?lat="+lat+"&lon="+long+"&type=bus_stop&app_id=781764bb&app_key=40a177294f041ee56d9ba84ef1b5849a";
+				console.log(url)
+				$.ajax({
+						url: url,
+						dataType: "json",
+						success : this.parseBusRepsonse,
+						error : function(req, err){ console.log('API call failed Bus ' + err); }
+						})
+		}
+
 //=======================================================
 //=======================================================
 
@@ -275,24 +310,7 @@ toggle_func(){
 	}
 }
 
-//==================================
-//==================================
-defaultLocation() {
-	var location = prompt("Please enter your location");
 
-}
-//==================================
-//==================================
-
-filter_tfl_lines() {
-	{/*var updatedTFL = this.state.tfl_checkList.map((x) => {
-		if(x.checked) {
-			return x;
-		}
-	}) */}
-
-
-}
 
 
 //==================================
@@ -367,9 +385,9 @@ filter_tfl_lines() {
 							</div>
 							<h2> TFL Line Filter </h2>
 							<h4> Select the lines interesting to you </h4>
-							<form>
+							<table>
 							{this.state.tfl_Options}
-							</form>
+							</table>
 							<div class={style.footer}>
 							<button onclick={this.toggle_func}>Back</button>
 							</div>
@@ -460,7 +478,6 @@ filter_tfl_lines() {
 			 })
 		 })
 	this.check_options()
-	console.log(this.state.tfl_lines)
 	}
 	//==============================
 	//==============================
@@ -469,13 +486,9 @@ filter_tfl_lines() {
 		let tflChoice = this.state.tfl_lines.filter((x) => {
 			return x.checked == true //
 		})
-		console.log(tflChoice)
 		let tflChoiceEffected = tflChoice.filter((x)=>{
 			return x.desc!="Good Service"
 		})
-		console.log(tflChoiceEffected)
-
-		console.log(tflChoiceEffected.length)
 		let tflLinesAffected = this.state.tfl_lines.filter((x) => {
 			return x.desc != "Good Service" //"Good Service"
 		})
@@ -492,6 +505,7 @@ filter_tfl_lines() {
 			}
 		}
 		else {
+
 			if (tflChoiceEffected.length==0){
 				tflList_of_effected =  <p style = "background-color: green; margin: 0;">All Your Choosen lines are in good service</p>;
 			}
@@ -535,9 +549,9 @@ filter_tfl_lines() {
 			this.check_options()
 
 			let tfl_f =tflLines.map(item =>
-			 	<div class = {style.tflContainer} >
+			 	<td class = {style.tflContainer} >
 					{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
-			 	</div>)
+			 	</td>)
 
 
 			this.setState({
@@ -560,37 +574,22 @@ filter_tfl_lines() {
 			time:time_t
 		})
 	}
+	//===========================================================
+	//===========================================================
+	parseBusRepsonse=(parsed_json)=>
+	{
+		let a = parsed_json['member']
+		console.log(a)
+			this.setState({
+					bus_stop_names:[]
+				})
+				let bus_stop =a.map((x) =>{
+					let names=x['name']
+					let atcode=x['atcocode']
+				return {names,atcode}})
+				console.log(bus_stop)
+					this.setState({
+							bus_stop:bus_stop
+						})
+					}
 }
-// parseBusRepsonse=(parsed_json)=>
-// {
-	// 	this.setState({
-		// 		bus_stop_names:[]
-		// 	})
-		// 	var bus_stop = new Array (5);
-		// 	for (var i =0 ; i<5 ; i++)
-		// 	{
-			// 		bus_stop[i]= parsed_json['member'][i]['name']
-			// 	}
-			// 	console.log(bus_stop)
-			// 	this.setState({
-				// 		bus_stop_names:bus_stop
-				// 	})
-				// }
-				// //===========================================================
-				// //===========================================================
-				// 	fetchBus = () =>
-				// 	{
-					// 		let a =navigator.geolocation.getCurrentPosition((pos)=>
-					// 		{
-						// 			var crd=pos.coords;
-						// 			var lat= crd.latitude;
-						// 			var long = crd.longitude
-						// 		var url = "http://transportapi.com/v3/uk/places.json?lat="+lat+"&lon="+long+"&type=bus_stop&app_id=781764bb&app_key=40a177294f041ee56d9ba84ef1b5849a";
-						// 		$.ajax({
-							// 			url: url,
-							// 			dataType: "jsonp",
-							// 			success : this.parseBusRepsonse,
-							// 			error : function(req, err){ console.log('API call failed Bus ' + err); }
-							// 			})
-							// 		})
-							// 	}
