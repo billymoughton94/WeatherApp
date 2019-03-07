@@ -123,8 +123,6 @@ fetchLocation= ()=>{
 			var crd=pos.coords;
 			var lat= crd.latitude;
 			var long = crd.longitude
-			console.log(lat)
-			console.log(long)
 		var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+long+"&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
@@ -569,7 +567,24 @@ toggle_func(){
 //=======================================
 //=======================================
 
-
+gettflLogo(id) {
+	switch(id) {
+		case 0: return <img src = {"../../assets/misc/Train_icons/tfl0.png" style = "width: 30px; height: 20px;"} />;
+		case 1: return <img src = "../../assets/misc/Train_icons/tfl1.png" style = "width: 30px; height: 20px;" />;
+		case 2: return <img src = "../../assets/misc/Train_icons/tfl2.png" style = "width: 30px; height: 20px;" />;
+		case 3: return <img src = "../../assets/misc/Train_icons/tfl3.png" style = "width: 30px; height: 20px;" />;
+		case 4: return <img src = "../../assets/misc/Train_icons/tfl4.png" style = "width: 30px; height: 20px;" />;
+		case 5: return <img src = "../../assets/misc/Train_icons/tfl5.png" style = "width: 30px; height: 20px;" />;
+		case 6: return <img src = "../../assets/misc/Train_icons/tfl6.png" style = "width: 30px; height: 20px;" />;
+		case 7: return <img src = "../../assets/misc/Train_icons/tfl7.png" style = "width: 30px; height: 20px;" />;
+		case 8: return <img src = "../../assets/misc/Train_icons/tfl8.png" style = "width: 30px; height: 20px;" />;
+		case 9: return <img src = "../../assets/misc/Train_icons/tfl9.png" style = "width: 30px; height: 20px;" />;
+		case 10: return <img src = "../../assets/misc/Train_icons/tfl10.png" style = "width: 30px; height: 20px;" />;
+		case 11: return <img src = "../../assets/misc/Train_icons/tfl11.png" style = "width: 30px; height: 20px;" />;
+		case 12: return <img src = "../../assets/misc/Train_icons/tfl12.png" style = "width: 30px; height: 20px;" />;
+		default: return null;
+	}
+}
 
 //=======================================
 //=======================================
@@ -588,10 +603,10 @@ parseTFLResponse = (parsed_json) =>
 			let name =x['name']
 			let checked=false
 			let tfl_id = id
+			let logo = "tfl_" + id + ".png"
 			id=id+1
 			return {name,checked,tfl_id,desc,res}
 		})
-		console.log(tflLines)
 		// Return certain lines based on their severity status
 		this.setState({
 			tfl_lines:tflLines
@@ -599,8 +614,10 @@ parseTFLResponse = (parsed_json) =>
 		this.check_options()
 
 		let tfl_f =tflLines.map(item =>
+
 			<div class = {style.checkBoxContainer} >
 				{item.name}<input type = "checkbox" onChange = {this.onToggle.bind(this,item) } ></input>
+				{this.gettflLogo(item.tfl_id)}
 			</div>)
 
 
@@ -655,13 +672,10 @@ parseTFLResponse = (parsed_json) =>
 		let tflChoice = this.state.tfl_lines.filter((x) => {
 			return x.checked == true //
 		})
-		console.log(tflChoice)
 		let tflChoiceEffected = tflChoice.filter((x)=>{
 			return x.desc!="Good Service"
 		})
-		console.log(tflChoiceEffected)
 
-		console.log(tflChoiceEffected.length)
 		let tflLinesAffected = this.state.tfl_lines.filter((x) => {
 			return x.desc != "Good Service" //"Good Service"
 		})
