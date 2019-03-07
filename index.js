@@ -41,7 +41,7 @@ export default class Iphone extends Component {
 //=======================================================
 
 fetchLocation= ()=>{
-	let a =navigator.geolocation.getCurrentPosition((pos)=>
+	let a = navigator.geolocation.getCurrentPosition((pos)=>
 	{
 		var crd=pos.coords;
 		var lat= crd.latitude;
@@ -260,6 +260,22 @@ toggle_func(){
 
 //==================================
 //==================================
+defaultLocation() {
+	var location = prompt("Please enter your location");
+
+}
+//==================================
+//==================================
+
+filter_tfl_lines() {
+	{/*var updatedTFL = this.state.tfl_checkList.map((x) => {
+		if(x.checked) {
+			return x;
+		}
+	}) */}
+
+
+}
 
 
 //==================================
@@ -269,7 +285,7 @@ toggle_func(){
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-		const forecastStyles = this.state.temp ? `${style.forecasts} ${style.filled}` : style.forecasts;
+		const forecastStyles = this.state.temp ? `${style.previewForecastsHigh} ${style.filled}` : style.forecasts;
 		var time = this.getTime();
 		let main = (<div class={ style.header }>
 							<div class={ style.city }>
@@ -290,9 +306,7 @@ toggle_func(){
 									<tr>
 										<td class={ style.lastUpdated }>Last updated {this.state.time}</td>
 									</tr>
-									<tr>
-										<td class={ style.feelsLike }>Feels like --°</td>
-									</tr>
+
 									<tr>
 										<td class={ style.dailyLook }>Daily Look</td>
 									</tr>
@@ -312,7 +326,7 @@ toggle_func(){
 									</tr>
 									<tr>
 										{this.state.forecasts.map((item, key) => {
-											return <td class = {style.previewForecastsHigh} key = {key}> {item} </td>
+											return <td class = {forecastStyles} key = {key}> {item} </td>
 										})}
 									</tr>
 
@@ -330,18 +344,33 @@ toggle_func(){
 							<button onclick={this.toggle_func}>Settings</button>
 							</div>
 						</div>);
+
 		let otherPage = (
 						<div class={ style.header }>
 							<div class={ style.city }>
 								Settings
 							</div>
-							<form onSumit="">
-							{this.state.tfl_name}
-							<submit>
-							</submit>
-							</form>
+							<h2> TFL Line Filter </h2>
+							<h4> Select the lines interesting to you </h4>
+
+
+
+
+
+
+							{this.state.tfl_checkList}
+
+							<input type = "submit" value = "Confirm" onClick = {this.filter_tfl_lines()}> </input>
+
+
+
+
+
+
+
 							<div class={style.footer}>
-							<button onclick={this.toggle_func}>go back</button>
+							<button onclick={this.toggle_func}>Back</button>
+							<button onClick = {this.defaultLocation}> Set Location </button>
 							</div>
 						</div>);
 		return (
@@ -420,11 +449,6 @@ toggle_func(){
 		})
 		let tflList;
 
-		let tflName=parsed_json.map((x)=>{
-			let name =x['name']
-			return {name}
-		})
-
 			let tflLines = parsed_json.map((x) => {
 				let desc = x['lineStatuses'][0]['statusSeverityDescription'];
 				let res = x['lineStatuses'] ['0'] ['reason'];
@@ -448,16 +472,24 @@ toggle_func(){
 						<div class = {style.TEXT}>{item.res}</div>
 				</div>)
 			}
+
+			/////////////////////////////////////////////////////////////////
+
+			let tflName=parsed_json.map((x)=>{
+				let name =x['name']
+				return {name}
+			})
+
 			tflName =tflName.map(item =>
 			 	<div class = {style.tflContainer}>
-					{item.name}<input type = "checkbox" value={item} ></input>
+					{item.name} <input type = "checkbox" value={item}> </input>
 			 	</div>)
-			// need to add
 
+		 /////////////////////////////////////////////////////////////////
 
 			this.setState({
 				tfl: tflList,
-				tfl_name: tflName
+				tfl_checkList: tflName
 			});
 	}
 
