@@ -1,6 +1,5 @@
 @import '~style/helpers';
 
-//========================//container//============================
 .containerLight {
 	//display: flex;
 	flex-direction: column;
@@ -12,7 +11,19 @@
 	padding-top: 50px;
 	margin: 0 auto;
 }
-//========================//container//============================
+
+.settingsLight {
+	//display: flex;
+	flex-direction: column;
+	background-image: url('../../assets/backgrounds/BG_light_settings.png');
+	color: #fff;
+	width: 414px;
+	height: 736px;
+	text-align: center;
+	padding-top: 50px;
+	margin: 0 auto;
+}
+
 .containerDark {
 	//display: flex;
 	flex-direction: column;
@@ -25,19 +36,6 @@
 	margin: 0 auto;
 }
 
-//========================//container//============================
-.settingsLight {
-	//display: flex;
-	flex-direction: column;
-	background-image: url('../../assets/backgrounds/BG_light_settings.png');
-	color: #fff;
-	width: 414px;
-	height: 736px;
-	text-align: center;
-	padding-top: 50px;
-	margin: 0 auto;
-}
-//========================//container//============================
 .settingsDark {
 	//display: flex;
 	flex-direction: column;
@@ -50,31 +48,44 @@
 	margin: 0 auto;
 }
 
-//========================//header//============================
+button {
+  background-image: url('../../assets/misc/Settings_button.png');
+  background-repeat: no-repeat;
+  background-color: Transparent;
+  //background-position: 50% 50%;
+  height: 32px;
+  width: 77px;
+  border: none;
+}
+
+button span {
+  //display: none;
+  color: white;
+}
+
 .header {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
 }
-
-//========================//details//============================
 .details {
 	flex: 4;
 }
-
-//========================//city//============================
 .city {
 	flex: 1;
 	font-size: 1.7em;
 	font-weight: 400;
 }
 
-//========================//weather//============================
 .currentConditions {
 	font-size: 1.2em;
 }
 
-//========================//weather//============================
+.conditions {
+	flex: 2;
+	font-size: 1em;
+}
+
 .predictedConditions {
 	font-size: 0.8em;
 	margin-bottom: 10px;
@@ -82,77 +93,35 @@
 	justify-content: center;
 }
 
-//========================//weather//============================
-.lastUpdated {
-	font-size: 0.8em;
-}
-
-//========================//weather//============================
-.feelsLike {
-	font-size: 0.8em;
-}
-
-//========================//weather//============================
-.dailyLook {
-	font-size: 1em;
-}
-
-//========================//temperature//============================
 .temperature {
 	font-size: 4.8em;
 	font-weight: 400px;
 	letter-spacing: -5px;
 }
 
-//========================//div//============================
 .forecasts {
 	padding: 0px
 }
 
-//========================//future°//============================
-.celsiusSymbol:after {
-	content: "°C";
-	font-size: 1em;
-	font-weight: 600;
+.filled:after {
+	content: "°";
+	font-size: 0.8em;
+	font-weight: 900;
 	display: inline-block;
 	vertical-align: top;
-	letter-spacing: -1px;}
-
-//========================//high temp//============================
-.previewForecastsHigh {
-	font-size: 1.4em;
-	font-weight: 900;
-	vertical-align: top;
 }
 
-//========================//low temp//============================
-.previewForecastsLow {
-	font-size: 0.8em;
-	color: #3D3D3D;
-	margin-left: 20px;
-	margin-right: 20px;
+.footer {
+	margin: 20px;
 }
 
-//========================//temp dates//============================
-.dates {
-	font-size: 0.8em;
-	font-weight: 900;
-	flex: 2;
-	justify-content: center;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-
-//========================//TFL notification//============================
-.tflContainer { /*tfl alerts*/
+.tflContainer {
 	position: relative;
 	text-align: center;
 	padding-top: 10px;
-	opacity: 0.95
 }
 
-//========================//TFL txt//============================
-.TEXT { /*tfl warnings*/
+.TEXT {
 	position: absolute;
 	color: black;
 	font-size: 12px;
@@ -165,28 +134,88 @@
 	overflow: auto;
 }
 
-//========================//units//============================
+
+.title {
+	font-size: 4em;
+	margin-bottom: 2px;
+}
+
+.tflline {
+	font-size: 2em;
+}
+
+.interestinglines {
+	font-size: 2em;
+	margin-bottom: 2px;
+}
+
 .units {
 	position: relative;
 	left: 320px;
 	bottom: 100px;
 	height: 0;
 	width: fit-content;
-
 }
 
-//========================//units//============================
 .units h1 {
 	height: 10px;
+
 }
 
-//========================//units//============================
 .units h1:hover {
 	cursor: pointer;
 }
 
-//========================//Redudant below//============================
-.filled:after { //5 day preview celcius
+.lastUpdated {
+	font-size: 0.8em;
+}
+
+.feelsLike {
+	font-size: 0.8em;
+}
+
+.dailyLook {
+	font-size: 1em;
+}
+
+.celsiusSymbol:after {
+	content: "°C";
+	font-size: 1em;
+	font-weight: 600;
+	display: inline-block;
+	vertical-align: top;
+	letter-spacing: -1px;}
+
+.previewForecastsHigh {
+	font-size: 1.4em;
+	font-weight: 900;
+	vertical-align: top;
+}
+
+.previewForecastsLow {
+	font-size: 0.8em;
+	color: #3D3D3D;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.dates {
+	font-size: 0.8em;
+	font-weight: 900;
+	flex: 2;
+	justify-content: center;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.tflContainer {
+	position: relative;
+	text-align: center;
+	padding-top: 10px;
+	opacity: 0.95
+}
+
+.filled:after { //Redundant
 	content: "°";
 	font-size: 1em;
 	font-weight: 600;

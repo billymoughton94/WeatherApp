@@ -123,7 +123,9 @@ fetchLocation= ()=>{
 			var crd=pos.coords;
 			var lat= crd.latitude;
 			var long = crd.longitude
-			var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+long+"&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
+			console.log(lat)
+			console.log(long)
+		var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+long+"&units=metric&APPID=a22d157664c6fbc5a70d03449d24bab3";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -143,7 +145,7 @@ fetchLocation= ()=>{
 //============================================================
 //============================================================
 //============================================================
-//=============== TFL DATA FETCH AND DISPLAY =================   DESCRIPTION: API WILL FETCH TFL TRAIN LINE DETAILS AND THEIR CONDITIONS
+//=============== TFL DATA FETCH AND DISPLAY ============= 		DESCRIPTION: API WILL FETCH TFL TRAIN LINE DETAILS AND THEIR CONDITIONS
 
 	fetchTflData = () => {
 		var url = "https://api.tfl.gov.uk/Line/Mode/tube%2Cdlr%2Coverground/Status?detail=true&app_id=2cf7f9a8&app_key=%20%20%20%2001aef9b37ed476700c32051e34bc4b83";
@@ -369,13 +371,13 @@ toggle_func(){
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-		const forecastStyles = this.state.temp ? `${style.previewForecastsHigh} ${style.filled}` : style.forecasts;
+		const forecastStyles = this.state.temp ? `${style.previewForecastsHigh} ${style.filled}` : style.previewForecastsHigh;
 		var time = this.getTime();
 		let main = (<div class={ style.header }>
 							<div class={ style.city }>
 								{ this.state.locate}, {this.state.country }
 							</div>
-							<div style = "height: 90px;">
+							<div style = "height: 85px;">
 								<span class={ tempStyles }> <img src = {this.mainWeatherSymbol(this.state.code)} />  { this.state.temp } </span>
 								<div class = {style.units}>
 									<h1 style = {{color: this.state.celColour}}	onClick = {this.state.toggle == false ? this.farToCelConvert : null}> C </h1>
@@ -395,7 +397,7 @@ toggle_func(){
 									</tr>
 								</table>
 							</div>
-							<div class = {style.forecasts} >
+							<div>
 								<table>
 									<tr>
 										{this.state.days.map((item, key) => {
@@ -424,7 +426,7 @@ toggle_func(){
 								{this.state.tfl}
 							</div>
 							<div class={style.footer}>
-							<button onclick={this.toggle_func}>Settings</button>
+							<button onclick={this.toggle_func}><span>Settings</span></button>
 							</div>
 						</div>);
 
@@ -442,18 +444,27 @@ toggle_func(){
 
 		let otherPage = (
 						<div class={ style.header }>
-							<div class={ style.city }>
+							<div class={ style.title }>
 								Settings
 							</div>
-							<h2> TFL Line Filter </h2>
-							<h4> Select the lines interesting to you </h4>
+								<table>
+									<tr>
+										<td class={ style.tflline }>TFL Line Filter</td>
+									</tr>
+									<tr>
+										<td class={ style.interestingline }>Select the lines interesting to you</td>
+									</tr>
+								</table>
 							<form>
 							{this.state.tfl_Options}
 							</form>
 							<div class={style.footer}>
-							<button onclick={this.toggle_func}>Back</button>
+							<button onclick={this.toggle_func}><span>Back</span></button>
 							</div>
 						</div>);
+
+
+
 
 //=============================================================================
 //=============================================================================
@@ -469,11 +480,11 @@ toggle_func(){
 						return (
 							<div>
 							{this.state.toggle_page ?
-								(<div class={ time >= 19 || time < 6 ? style.containerDark : style.containerLight }>
+								(<div class={ time >= 19 || time < 6 ? style.containerLight : style.containerLight }>
 								<span> {main} </span>
 								</div>)
 								:
-								(<div class={ time >= 19 || time < 6 ? style.settingsDark : style.settingsLight }>
+								(<div class={ time >= 19 || time < 6 ? style.settingsLight : style.settingsLight }>
 								<span> {otherPage} </span>
 								</div>)
 							};
@@ -580,6 +591,7 @@ parseTFLResponse = (parsed_json) =>
 			id=id+1
 			return {name,checked,tfl_id,desc,res}
 		})
+		console.log(tflLines)
 		// Return certain lines based on their severity status
 		this.setState({
 			tfl_lines:tflLines
@@ -643,10 +655,13 @@ parseTFLResponse = (parsed_json) =>
 		let tflChoice = this.state.tfl_lines.filter((x) => {
 			return x.checked == true //
 		})
+		console.log(tflChoice)
 		let tflChoiceEffected = tflChoice.filter((x)=>{
 			return x.desc!="Good Service"
 		})
+		console.log(tflChoiceEffected)
 
+		console.log(tflChoiceEffected.length)
 		let tflLinesAffected = this.state.tfl_lines.filter((x) => {
 			return x.desc != "Good Service" //"Good Service"
 		})
