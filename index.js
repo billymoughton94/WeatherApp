@@ -754,36 +754,4 @@ parseTFLResponse = (parsed_json) =>
 
 
 
-// parseBusRepsonse=(parsed_json)=>
-// {
-	// 	this.setState({
-		// 		bus_stop_names:[]
-		// 	})
-		// 	var bus_stop = new Array (5);
-		// 	for (var i =0 ; i<5 ; i++)
-		// 	{
-			// 		bus_stop[i]= parsed_json['member'][i]['name']
-			// 	}
-			// 	console.log(bus_stop)
-			// 	this.setState({
-				// 		bus_stop_names:bus_stop
-				// 	})
-				// }
-				// //===========================================================
-				// //===========================================================
-				// 	fetchBus = () =>
-				// 	{
-					// 		let a =navigator.geolocation.getCurrentPosition((pos)=>
-					// 		{
-						// 			var crd=pos.coords;
-						// 			var lat= crd.latitude;
-						// 			var long = crd.longitude
-						// 		var url = "http://transportapi.com/v3/uk/places.json?lat="+lat+"&lon="+long+"&type=bus_stop&app_id=781764bb&app_key=40a177294f041ee56d9ba84ef1b5849a";
-						// 		$.ajax({
-							// 			url: url,
-							// 			dataType: "jsonp",
-							// 			success : this.parseBusRepsonse,
-							// 			error : function(req, err){ console.log('API call failed Bus ' + err); }
-							// 			})
-							// 		})
-							// 	}
+
